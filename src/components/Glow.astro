@@ -1,0 +1,39 @@
+---
+/**
+ * Градиентното петно на шаблона.
+ *
+ * В оригинала то не е фон „за настроение“ — то заема близо половин карта,
+ * не е приглушено и излиза извън ръба ѝ. Точно това дава усещането за
+ * дълбочина; свито и приглушено, същото петно изглежда като зацапване.
+ */
+export type Props = {
+  /** Име на файла в `public/images/gradient/` без разширението. */
+  src?: 'opai-24' | 'opai-25' | 'opai-26' | 'opai-27' | 'opai-28' | 'opai-29';
+  /** Къде да излиза петното. */
+  at?: 'top-right' | 'top-left' | 'top' | 'bottom-right' | 'bottom-left' | 'center';
+  /** Класове за размер — по подразбиране е с размера на картите. */
+  class?: string;
+  /** `eager` само за петната над сгъвката. */
+  eager?: boolean;
+};
+
+const { src = 'opai-26', at = 'top-right', class: klass = 'h-[420px] w-[420px]', eager = false } = Astro.props;
+
+const positions: Record<NonNullable<Props['at']>, string> = {
+  'top-right': '-top-[35%] -right-[18%]',
+  'top-left': '-top-[35%] -left-[18%]',
+  top: '-top-[45%] left-1/2 -translate-x-1/2',
+  'bottom-right': '-bottom-[35%] -right-[18%]',
+  'bottom-left': '-bottom-[35%] -left-[18%]',
+  center: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+};
+---
+
+<img
+  src={`/images/gradient/${src}.webp`}
+  alt=""
+  aria-hidden="true"
+  class={`pointer-events-none absolute z-0 max-w-none object-contain ${positions[at]} ${klass}`}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+/>

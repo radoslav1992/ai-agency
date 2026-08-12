@@ -7,30 +7,47 @@ const lang = localeOf(Astro.currentLocale);
 const t = ui(lang);
 ---
 
-<section class="relative overflow-hidden py-20 md:py-24 lg:py-28 xl:py-36">
-  <img
-    src="/images/gradient/opai-29.webp"
-    alt=""
-    aria-hidden="true"
-    class="pointer-events-none absolute bottom-[-45%] left-1/2 h-[760px] w-[760px] max-w-none -translate-x-1/2 object-contain opacity-60"
-    loading="lazy"
-    decoding="async"
-  />
-
-  <div class="main-container relative z-2 flex flex-col items-center text-center">
-    <h2
+<!--
+  Панелът от края на шаблона: заоблен блок със синьо-зелено сияние отдолу и
+  ситен звезден прах. Не е секция върху фона на страницата, а отделна плоча
+  — затова се откроява като последното нещо, което читателят вижда.
+-->
+<section class="pt-14 pb-20 lg:pt-20 lg:pb-28">
+  <div class="main-container">
+    <div
+      class="bg-background-6 border-stroke-1/11 relative overflow-hidden rounded-lg border px-6 py-20 lg:px-10 lg:py-28"
       data-opai-animate
-      data-delay="0.1"
-      class="text-sora-heading-4 sm:text-sora-heading-3 lg:text-sora-heading-2 max-w-[820px] text-white"
+      data-delay="0.08"
     >
-      {t.cta.title}
-    </h2>
-    <p data-opai-animate data-delay="0.2" class="text-tagline-2 mt-5 max-w-[620px] font-normal text-white/60">
-      {t.cta.body}
-    </p>
-    <div data-opai-animate data-delay="0.3" class="mt-9">
-      <Button href={localeHref('/contact/', lang)}>{t.cta.button}</Button>
+      <!-- Сиянието: широк студен ореол, който изгрява от долния ръб. -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 bottom-[-55%] h-[130%] bg-[radial-gradient(ellipse_at_center,rgba(43,192,228,0.42)_0%,rgba(43,192,228,0.12)_38%,transparent_68%)]"
+      >
+      </div>
+      <!-- Звездният прах — две решетки от точки с различна гъстота. -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 opacity-45 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),radial-gradient(rgba(255,255,255,0.35)_1px,transparent_1px)] [background-position:0_0,34px_28px] [background-size:78px_78px,124px_124px]"
+      >
+      </div>
+
+      <div class="relative z-2 flex flex-col items-center text-center">
+        <h2
+          data-opai-animate
+          data-delay="0.15"
+          class="text-sora-heading-4 sm:text-sora-heading-3 lg:text-sora-heading-2 max-w-[18ch] text-white"
+        >
+          {t.cta.title}
+        </h2>
+        <p data-opai-animate data-delay="0.25" class="text-tagline-2 mt-5 max-w-[560px] font-normal text-white/60">
+          {t.cta.body}
+        </p>
+        <div data-opai-animate data-delay="0.35" class="mt-10">
+          <Button href={localeHref('/contact/', lang)}>{t.cta.button}</Button>
+        </div>
+        <p data-opai-animate data-delay="0.4" class="text-tagline-3 mt-6 font-normal text-white/35">{t.cta.note}</p>
+      </div>
     </div>
-    <p data-opai-animate data-delay="0.35" class="text-tagline-3 mt-5 font-normal text-white/40">{t.cta.note}</p>
   </div>
 </section>

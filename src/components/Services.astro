@@ -1,5 +1,7 @@
 ---
 import SectionHeading from './SectionHeading.astro';
+import Glow from './Glow.astro';
+import Icon from './Icon.astro';
 import { localeOf, href as localeHref } from '../i18n/index.ts';
 import { ui, content } from '../i18n/content.ts';
 
@@ -7,9 +9,18 @@ const lang = localeOf(Astro.currentLocale);
 const t = ui(lang);
 const { SERVICES, SECONDARY_SERVICES } = content(lang);
 
-/** Водещата услуга заема цялата ширина; останалите вървят по три в ред. */
-const [lead, ...rest] = SERVICES;
-const gradients = ['opai-25', 'opai-26', 'opai-27', 'opai-28'];
+/**
+ * Бенто решетката на шаблона: два широки реда отгоре, три тесни отдолу.
+ * Еднаквите по размер карти изглеждат като таблица; разликата в ширината е
+ * това, което прави секцията да изглежда проектирана, а не изсипана.
+ */
+const all = [...SERVICES, ...SECONDARY_SERVICES];
+const cards = all.map((service, i) => ({
+  service,
+  wide: i < 2,
+  icon: ['sparkle', 'layers', 'cube', 'chart', 'person'][i] ?? 'sparkle',
+  glow: (['opai-24', 'opai-27', 'opai-25', 'opai-26', 'opai-28'] as const)[i] ?? 'opai-26',
+}));
 ---
 
 <section id="services" class="scroll-mt-28 py-20 md:py-24 lg:py-28 xl:py-36">
@@ -17,115 +28,59 @@ const gradients = ['opai-25', 'opai-26', 'opai-27', 'opai-28'];
     <SectionHeading eyebrow={t.services.eyebrow} title={t.services.title} note={t.services.note} />
 
     <div class="grid grid-cols-12 gap-6">
-      <!-- Водещата услуга -->
-      <article
-        class="bg-background-6 border-stroke-1/11 relative col-span-12 overflow-hidden rounded-lg border"
-        data-opai-animate
-        data-delay="0.1"
-      >
-        <img
-          src="/images/gradient/opai-24.webp"
-          alt=""
-          aria-hidden="true"
-          class="pointer-events-none absolute -top-[40%] -right-[10%] h-[520px] w-[520px] max-w-none object-contain opacity-70"
-          loading="lazy"
-          decoding="async"
-        />
-        <div class="relative z-2 grid grid-cols-12 gap-x-10 gap-y-8 p-6 sm:p-9 lg:p-12">
-          <div class="col-span-12 space-y-5 lg:col-span-5">
-            <span class="font-ibm-plex-mono text-tagline-4 text-white/40">{lead.number}</span>
-            <h3 class="text-sora-heading-5 md:text-sora-heading-4 font-normal text-white">
-              {lead.title}
-            </h3>
-            {
-              lead.problem && (
-                <div class="space-y-1.5">
-                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.problem}</p>
-                  <p class="text-tagline-3 font-normal text-white/60">{lead.problem}</p>
-                </div>
-              )
-            }
-            {
-              lead.solution && (
-                <div class="space-y-1.5">
-                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.solution}</p>
-                  <p class="text-tagline-3 font-normal text-white/60">{lead.solution}</p>
-                </div>
-              )
-            }
-            {
-              lead.link && (
-                <a
-                  href={localeHref(lead.link.href, lang)}
-                  class="text-tagline-3 font-sora inline-block text-white transition-opacity duration-300 hover:opacity-70"
-                >
-                  {lead.link.label}
-                </a>
-              )
-            }
-          </div>
-
-          <div class="col-span-12 lg:col-span-7">
-            <p class="font-ibm-plex-mono text-tagline-4 mb-4 text-white/40 uppercase">{t.services.change}</p>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {
-                (lead.changes ?? []).map((change) => (
-                  <div class="bg-background-5 border-stroke-1/11 space-y-2 rounded-lg border p-5">
-                    <h4 class="text-sora-heading-6 font-normal text-white">{change.title}</h4>
-                    <p class="text-tagline-3 font-normal text-white/60">{change.body}</p>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Останалите услуги -->
       {
-        [...rest, ...SECONDARY_SERVICES].map((service, i) => (
+        cards.map(({ service, wide, icon, glow }, i) => (
           <article
-            class="bg-background-6 border-stroke-1/11 relative col-span-12 overflow-hidden rounded-lg border md:col-span-6 xl:col-span-3"
+            class:list={[
+              'bg-background-6 border-stroke-1/11 group/card relative col-span-12 overflow-hidden rounded-lg border transition-colors duration-500 hover:border-white/20',
+              wide ? 'lg:col-span-6' : 'md:col-span-6 lg:col-span-4',
+            ]}
             data-opai-animate
-            data-delay={`${0.15 + i * 0.08}`}
+            data-delay={`${0.08 + (i % 3) * 0.08}`}
           >
-            <img
-              src={`/images/gradient/${gradients[i % gradients.length]}.webp`}
-              alt=""
-              aria-hidden="true"
-              class="pointer-events-none absolute -top-[22%] -right-[24%] h-[300px] w-[300px] max-w-none object-contain opacity-60"
-              loading="lazy"
-              decoding="async"
+            <Glow
+              src={glow}
+              at={wide ? 'bottom-right' : 'top-right'}
+              class="h-[440px] w-[440px] opacity-90 transition-transform duration-700 group-hover/card:scale-110"
             />
-            <div class="relative z-2 flex h-full flex-col gap-5 p-6 lg:p-8">
-              <span class="font-ibm-plex-mono text-tagline-4 text-white/40">{service.number}</span>
-              <h3 class="text-sora-heading-6 md:text-sora-heading-5 font-normal text-white">{service.title}</h3>
 
-              {service.body && <p class="text-tagline-3 font-normal text-white/60">{service.body}</p>}
+            <div class="relative z-2 flex h-full flex-col gap-6 p-7 lg:p-9">
+              <div class="flex items-center justify-between gap-4">
+                <span class="flex size-14 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.03] text-white backdrop-blur-[10px]">
+                  <Icon name={icon} class="size-6" />
+                </span>
+                <span class="font-ibm-plex-mono text-tagline-4 text-white/25">{service.number}</span>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="text-sora-heading-5 font-normal text-white">{service.title}</h3>
+                <p class="text-tagline-3 max-w-[52ch] font-normal text-white/55">
+                  {service.solution ?? service.body}
+                </p>
+              </div>
 
               {service.problem && (
-                <div class="space-y-1.5">
-                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.problem}</p>
-                  <p class="text-tagline-3 font-normal text-white/60">{service.problem}</p>
-                </div>
+                <p class="text-tagline-3 max-w-[52ch] border-l border-white/10 pl-4 font-normal text-white/40">
+                  {service.problem}
+                </p>
               )}
-              {service.solution && (
-                <div class="space-y-1.5">
-                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.solution}</p>
-                  <p class="text-tagline-3 font-normal text-white/60">{service.solution}</p>
-                </div>
-              )}
-              {service.change && (
-                <div class="space-y-1.5">
-                  <p class="font-ibm-plex-mono text-tagline-4 text-white/40 uppercase">{t.services.change}</p>
-                  <p class="text-tagline-3 font-normal text-white/60" set:html={service.change} />
-                </div>
+
+              {/* Ефектите на водещата услуга — трите ѝ подзаглавия. */}
+              {service.changes && (
+                <ul class="grid gap-3 sm:grid-cols-3">
+                  {service.changes.map((change) => (
+                    <li class="space-y-1 rounded-lg border border-white/8 bg-white/[0.02] p-4 backdrop-blur-[6px]">
+                      <p class="text-tagline-3 font-medium text-white">{change.title}</p>
+                      <p class="text-tagline-4 font-normal text-white/50">{change.body}</p>
+                    </li>
+                  ))}
+                </ul>
               )}
 
               {service.points && (
-                <ul class="mt-auto space-y-2 pt-2">
+                <ul class="space-y-2">
                   {service.points.map((point) => (
-                    <li class="text-tagline-3 flex gap-x-2.5 font-normal text-white/60">
+                    <li class="text-tagline-3 flex gap-x-2.5 font-normal text-white/55">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -149,14 +104,29 @@ const gradients = ['opai-25', 'opai-26', 'opai-27', 'opai-28'];
                 </ul>
               )}
 
-              {service.link && (
+              <div class="mt-auto pt-2">
                 <a
-                  href={localeHref(service.link.href, lang)}
-                  class="text-tagline-3 font-sora mt-auto inline-block text-white transition-opacity duration-300 hover:opacity-70"
+                  href={localeHref(service.link?.href ?? '/contact/', lang)}
+                  class="font-ibm-plex-mono text-tagline-4 inline-flex items-center gap-x-2 rounded-lg border border-white/12 px-4 py-2.5 text-white/70 transition-colors duration-300 hover:border-white/30 hover:text-white"
                 >
-                  {service.link.label}
+                  {service.link?.label.replace(/\s*→$/, '') ?? t.services.more}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6.75 13.5L11.25 9L6.75 4.5"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </a>
-              )}
+              </div>
             </div>
           </article>
         ))

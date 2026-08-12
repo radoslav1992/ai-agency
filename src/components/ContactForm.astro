@@ -1,4 +1,5 @@
 ---
+import Glow from './Glow.astro';
 import Eyebrow from './Eyebrow.astro';
 import { localeOf } from '../i18n/index.ts';
 import { ui, content } from '../i18n/content.ts';
@@ -13,14 +14,7 @@ const inputClass =
 ---
 
 <div class="bg-background-6 border-stroke-1/11 relative overflow-hidden rounded-lg border">
-  <img
-    src="/images/gradient/opai-25.webp"
-    alt=""
-    aria-hidden="true"
-    class="pointer-events-none absolute -top-[25%] -right-[15%] h-[400px] w-[400px] max-w-none object-contain opacity-60"
-    loading="lazy"
-    decoding="async"
-  />
+  <Glow src="opai-25" at="top-right" class="h-[460px] w-[460px] opacity-85" />
 
   <!--
     `action` и `method` вършат работа и без JavaScript: Worker-ът приема

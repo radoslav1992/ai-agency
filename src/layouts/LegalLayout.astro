@@ -1,4 +1,5 @@
 ---
+import Glow from '../components/Glow.astro';
 import BaseLayout from './BaseLayout.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 
@@ -15,14 +16,7 @@ const { title, description, eyebrow, updated } = Astro.props;
 
 <BaseLayout title={title} description={description}>
   <section class="relative overflow-hidden pt-32 pb-16 sm:pt-40 lg:pt-44">
-    <img
-      src="/images/gradient/opai-27.webp"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute -top-[40%] left-1/2 h-[640px] w-[640px] max-w-none -translate-x-1/2 object-contain opacity-50"
-      loading="eager"
-      decoding="async"
-    />
+    <Glow src="opai-27" at="top" class="h-[700px] w-[700px] opacity-70" eager />
     <div class="main-container relative z-2 max-w-[760px] space-y-4">
       <Eyebrow>{eyebrow}</Eyebrow>
       <h1 class="text-sora-heading-4 sm:text-sora-heading-3 lg:text-sora-heading-2 text-white">{title}</h1>

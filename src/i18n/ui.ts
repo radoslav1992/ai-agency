@@ -51,6 +51,8 @@ export const UI = {
       problem: 'Проблемът',
       solution: 'Решението',
       change: 'Какво се променя',
+      /** Надписът на бутона в карта без собствена котва. */
+      more: 'Говори с мен',
     },
 
     analyzerStrip: {
@@ -188,6 +190,7 @@ export const UI = {
       problem: 'The problem',
       solution: 'The solution',
       change: 'What changes',
+      more: 'Talk to me',
     },
 
     analyzerStrip: {

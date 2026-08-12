@@ -1,5 +1,10 @@
 ---
-/** Малкият етикет над всяко заглавие — точка с градиент и моноширинен текст. */
+/**
+ * Малкият етикет над всяко заглавие — точка с градиент и моноширинен текст.
+ *
+ * Шаблонът НЕ го изписва с главни букви (`first-letter:uppercase`), а само
+ * с главна първа. Версални букви утежняват и се карат със заглавието отдолу.
+ */
 type Props = { class?: string };
 const { class: klass = '' } = Astro.props;
 ---
@@ -10,7 +15,7 @@ const { class: klass = '' } = Astro.props;
       <span class="absolute inset-0 size-2 rounded-[5px] bg-linear-[90deg,#2BC0E4_0%,#EAECC6_100%] blur-[7px]"></span>
     </span>
     <span
-      class="font-ibm-plex-mono text-tagline-4 bg-(image:--color-gradient-19) bg-clip-text font-normal text-transparent uppercase"
+      class="font-ibm-plex-mono text-tagline-4 bg-(image:--color-gradient-19) bg-clip-text font-normal text-transparent first-letter:uppercase"
     >
       <slot />
     </span>
