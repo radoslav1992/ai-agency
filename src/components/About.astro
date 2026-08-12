@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import Eyebrow from './Eyebrow.astro';
+import stageTalk from '../assets/stage-talk.png';
+import { localeOf } from '../i18n/index.ts';
+import { ui, content, projects as projectsFor } from '../i18n/content.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { ABOUT } = content(lang);
+const { PROJECTS } = projectsFor(lang);
+
+/** Броят проекти не се пише на ръка — идва от самия списък. */
+const forClients = PROJECTS.filter((p) => !p.own).length;
+const stats = [...ABOUT.stats, t.about.projectsStat(PROJECTS.length, forClients)];
+---
+
+<section id="about" class="scroll-mt-28 py-20 md:py-24 lg:py-28 xl:py-36">
+  <div class="main-container">
+    <div class="bg-background-6 border-stroke-1/11 relative overflow-hidden rounded-lg border">
+      <img
+        src="/images/gradient/opai-27.webp"
+        alt=""
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-[30%] -left-[15%] h-[560px] w-[560px] max-w-none object-contain opacity-50"
+        loading="lazy"
+        decoding="async"
+      />
+
+      <div class="relative z-2 grid grid-cols-12 gap-x-12 gap-y-10 p-6 sm:p-9 lg:p-14">
+        <div class="col-span-12 space-y-6 lg:col-span-7">
+          <div data-opai-animate data-delay="0.1">
+            <Eyebrow>{t.about.eyebrow}</Eyebrow>
+          </div>
+
+          <h2
+            data-opai-animate
+            data-delay="0.15"
+            class="text-sora-heading-4 sm:text-sora-heading-3 lg:text-sora-heading-2 text-white"
+          >
+            {ABOUT.heading}
+          </h2>
+
+          <div class="space-y-4" data-opai-animate data-delay="0.2">
+            {ABOUT.paragraphs.map((p) => <p class="text-tagline-2 font-normal text-white/60">{p}</p>)}
+          </div>
+
+          <ul class="flex flex-wrap gap-2" data-opai-animate data-delay="0.25">
+            {
+              ABOUT.skills.map((skill) => (
+                <li class="border-stroke-1/11 font-ibm-plex-mono text-tagline-4 rounded-[4px] border bg-white/[0.02] px-3 py-1.5 text-white/60">
+                  {skill}
+                </li>
+              ))
+            }
+          </ul>
+
+          <dl class="grid grid-cols-1 gap-4 border-t border-white/8 pt-6 sm:grid-cols-3" data-opai-animate data-delay="0.3">
+            {
+              stats.map((stat) => (
+                <div class="space-y-1">
+                  <dt class="text-sora-heading-6 font-sora font-normal text-white">{stat.value}</dt>
+                  <dd class="text-tagline-3 font-normal text-white/50">{stat.label}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <figure class="col-span-12 lg:col-span-5" data-opai-animate data-delay="0.2" data-direction="right">
+          <Image
+            src={stageTalk}
+            alt={t.about.imageAlt}
+            widths={[520, 1040]}
+            sizes="(min-width: 1024px) 480px, 100vw"
+            class="border-stroke-1/11 w-full rounded-lg border object-cover"
+          />
+          <figcaption class="text-tagline-4 mt-3 font-normal text-white/40">{ABOUT.imageCaption}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>

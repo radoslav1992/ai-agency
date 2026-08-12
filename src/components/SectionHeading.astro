@@ -1,0 +1,39 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+/** Шапката на секция: етикет, заглавие и по желание пояснение отдолу. */
+type Props = {
+  eyebrow?: string;
+  title: string;
+  note?: string;
+  align?: 'center' | 'left';
+  class?: string;
+};
+
+const { eyebrow, title, note, align = 'center', class: klass = '' } = Astro.props;
+const alignment = align === 'center' ? 'text-center mx-auto' : 'text-left';
+---
+
+<div class={`max-w-[720px] space-y-4 ${alignment} ${klass}`}>
+  {
+    eyebrow && (
+      <div data-opai-animate data-delay="0.1">
+        <Eyebrow>{eyebrow}</Eyebrow>
+      </div>
+    )
+  }
+  <h2
+    data-opai-animate
+    data-delay="0.2"
+    class="text-sora-heading-4 sm:text-sora-heading-3 lg:text-sora-heading-2 text-white"
+  >
+    {title}
+  </h2>
+  {
+    note && (
+      <p data-opai-animate data-delay="0.3" class="text-tagline-2 font-normal text-white/60">
+        {note}
+      </p>
+    )
+  }
+</div>

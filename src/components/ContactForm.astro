@@ -1,0 +1,140 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import { localeOf } from '../i18n/index.ts';
+import { ui, content } from '../i18n/content.ts';
+import { SITE } from '../data/site.mjs';
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { NEEDS } = content(lang);
+
+const inputClass =
+  'bg-background-5 border-stroke-1/11 text-tagline-3 w-full rounded-lg border px-4 py-3 font-normal text-white placeholder:text-white/30 transition-colors duration-300 focus:border-white/30 focus:outline-none';
+---
+
+<div class="bg-background-6 border-stroke-1/11 relative overflow-hidden rounded-lg border">
+  <img
+    src="/images/gradient/opai-25.webp"
+    alt=""
+    aria-hidden="true"
+    class="pointer-events-none absolute -top-[25%] -right-[15%] h-[400px] w-[400px] max-w-none object-contain opacity-60"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <form
+    id="contact-form"
+    class="relative z-2 space-y-5 p-6 sm:p-9 lg:p-12"
+    data-email={SITE.email}
+    novalidate
+  >
+    <Eyebrow>{t.footer.contactTitle}</Eyebrow>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div class="space-y-2">
+        <label for="name" class="text-tagline-3 block font-normal text-white/70">{t.form.name}</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          autocomplete="name"
+          placeholder={t.form.namePlaceholder}
+          class={inputClass}
+        />
+      </div>
+      <div class="space-y-2">
+        <label for="email" class="text-tagline-3 block font-normal text-white/70">{t.form.email}</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="ime@firma.bg"
+          class={inputClass}
+        />
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <label for="need" class="text-tagline-3 block font-normal text-white/70">{t.form.need}</label>
+      <select id="need" name="need" class={inputClass}>
+        {NEEDS.map((need) => <option value={need}>{need}</option>)}
+      </select>
+    </div>
+
+    <div class="space-y-2">
+      <label for="message" class="text-tagline-3 block font-normal text-white/70">{t.form.message}</label>
+      <textarea id="message" name="message" rows="6" required placeholder={t.form.messagePlaceholder} class={inputClass}
+      ></textarea>
+    </div>
+
+    <!-- Капан за ботове: истинските хора не виждат това поле. -->
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label for="company-website">{t.form.honeypot}</label>
+      <input id="company-website" name="company-website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-3 pt-2">
+      <button
+        type="submit"
+        class="group/btn relative inline-block h-12 max-w-max cursor-pointer overflow-hidden rounded-lg border-transparent bg-linear-to-r from-[#2BC0E4] to-[#EAECC6] p-px"
+      >
+        <span
+          class="bg-background-6 font-inter-tight text-tagline-2 flex h-full items-center gap-x-2.5 rounded-lg py-3 pr-6 pl-6 font-normal text-white"
+        >
+          <span data-submit-label>{t.form.submit}</span>
+        </span>
+      </button>
+
+      <p class="text-tagline-3 font-normal text-white/50">
+        {t.form.orEmail}
+        <a href={`mailto:${SITE.email}`} class="text-opai-cyan underline underline-offset-4">{SITE.email}</a>
+      </p>
+    </div>
+
+    <p
+      data-form-status
+      role="status"
+      aria-live="polite"
+      class="text-tagline-3 hidden font-normal text-white/70"
+    >
+    </p>
+  </form>
+</div>
+
+<script is:inline define:vars={{ thanks: t.form.thanks, sending: t.form.sending }}>
+  // Сайтът е статичен — няма сървър, който да приеме формата. Затова тя
+  // сглобява писмото и го отваря в пощенския клиент на посетителя. Когато
+  // има адрес на форма (Formspree, Worker и подобни), заменяш този блок с
+  // обикновен `fetch` към него — разметката вече е готова за това.
+  const form = document.getElementById('contact-form');
+  if (form) {
+    const status = form.querySelector('[data-form-status]');
+    const label = form.querySelector('[data-submit-label]');
+    const original = label ? label.textContent : '';
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      if (form.elements['company-website'].value) return;
+
+      const data = new FormData(form);
+      const to = form.dataset.email;
+      const subject = `${data.get('need')} — ${data.get('name')}`;
+      const body = [data.get('message'), '', `${data.get('name')} · ${data.get('email')}`].join('\n');
+
+      if (label) label.textContent = sending;
+      window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      if (status) {
+        status.textContent = thanks;
+        status.classList.remove('hidden');
+      }
+      window.setTimeout(() => {
+        if (label) label.textContent = original;
+      }, 2000);
+    });
+  }
+</script>

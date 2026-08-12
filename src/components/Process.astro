@@ -1,0 +1,67 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { localeOf } from '../i18n/index.ts';
+import { ui, content } from '../i18n/content.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { PROCESS, TERMS } = content(lang);
+
+const gradients = ['opai-25', 'opai-26', 'opai-27', 'opai-28'];
+---
+
+<section id="process" class="scroll-mt-28 py-20 md:py-24 lg:py-28 xl:py-36">
+  <div class="main-container space-y-14 md:space-y-19">
+    <SectionHeading eyebrow={t.process.eyebrow} title={t.process.title} />
+
+    <div class="grid grid-cols-12 gap-6">
+      {
+        PROCESS.map((step, i) => (
+          <article
+            class="bg-background-6 border-stroke-1/11 relative col-span-12 overflow-hidden rounded-lg border md:col-span-6 lg:col-span-3"
+            data-opai-animate
+            data-delay={`${0.1 + i * 0.1}`}
+          >
+            <img
+              src={`/images/gradient/${gradients[i % gradients.length]}.webp`}
+              alt=""
+              aria-hidden="true"
+              class="pointer-events-none absolute -top-[18%] -right-[20%] h-[280px] w-[280px] max-w-none object-contain opacity-70"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="relative z-2 flex min-h-[300px] flex-col justify-between gap-12 px-6 pt-9 pb-7">
+              <span class="font-ibm-plex-mono text-4xl leading-none text-white/25">{step.number}</span>
+              <div class="space-y-2">
+                <h3 class="text-sora-heading-6 md:text-sora-heading-5 font-normal text-white">{step.title}</h3>
+                <p class="font-inter-tight text-tagline-3 text-white/60">{step.body}</p>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <!-- Условията, които клиентът иначе пита по имейл — казани предварително. -->
+    <div class="bg-background-6 border-stroke-1/11 rounded-lg border p-6 sm:p-9" data-opai-animate data-delay="0.1">
+      <h3 class="text-sora-heading-6 md:text-sora-heading-5 font-normal text-white">{t.process.terms}</h3>
+      <div class="mt-6 grid grid-cols-1 gap-x-10 md:grid-cols-2">
+        {
+          TERMS.map((term) => (
+            <details class="group/term border-b border-white/8 py-4">
+              <summary class="text-tagline-2 flex cursor-pointer list-none items-center justify-between gap-4 font-normal text-white/90 [&::-webkit-details-marker]:hidden">
+                <span>{term.title}</span>
+                <span class="shrink-0 transition-transform duration-300 group-open/term:rotate-45">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M7 1v12M1 7h12" stroke="#5DDCF6" stroke-linecap="round" />
+                  </svg>
+                </span>
+              </summary>
+              <p class="text-tagline-3 mt-2.5 font-normal text-white/60">{term.body}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

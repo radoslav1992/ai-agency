@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Button from '../components/Button.astro';
+import { localeOf, href as localeHref } from '../i18n/index.ts';
+import { PAGES } from '../i18n/pages.ts';
+import { nav } from '../i18n/content.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const p = PAGES[lang].notFound;
+const links = nav(lang);
+---
+
+<BaseLayout title={p.metaTitle} description={p.lead} noindex>
+  <PageHeader eyebrow={p.eyebrow} title={p.title} lead={p.lead} gradient="opai-29" />
+
+  <section class="pb-24 lg:pb-32">
+    <div class="main-container flex flex-col items-center gap-8">
+      <Button href={localeHref('/', lang)}>{p.home}</Button>
+
+      <ul class="flex flex-wrap justify-center gap-2">
+        {
+          links.map((item) => (
+            <li>
+              <a
+                href={localeHref(item.href, lang)}
+                class="border-stroke-1/11 text-tagline-4 font-ibm-plex-mono rounded-[4px] border bg-white/[0.02] px-3 py-1.5 text-white/60 transition-colors duration-300 hover:border-white/25 hover:text-white"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

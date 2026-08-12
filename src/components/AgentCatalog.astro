@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets';
+import Eyebrow from './Eyebrow.astro';
+import { localeOf } from '../i18n/index.ts';
+import { agents as agentsFor } from '../i18n/content.ts';
+import { PAGES } from '../i18n/pages.ts';
+import { agentShot } from '../data/agentShots.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const p = PAGES[lang].agents;
+const { AGENTS, AGENT_PROCESS } = agentsFor(lang);
+---
+
+<section class="py-16 lg:py-24">
+  <div class="main-container space-y-12">
+    <nav
+      class="flex flex-wrap justify-center gap-2"
+      aria-label={p.jump}
+      data-opai-animate
+      data-delay="0.1"
+    >
+      {
+        AGENTS.map((agent) => (
+          <a
+            href={`#${agent.id}`}
+            class="border-stroke-1/11 text-tagline-4 font-ibm-plex-mono rounded-[4px] border bg-white/[0.02] px-3 py-1.5 text-white/60 transition-colors duration-300 hover:border-white/25 hover:text-white"
+          >
+            {agent.name}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="space-y-6">
+      {
+        AGENTS.map((agent, i) => {
+          const shot = agentShot(agent.id);
+          return (
+            <article
+              id={agent.id}
+              class="bg-background-6 border-stroke-1/11 scroll-mt-28 overflow-hidden rounded-lg border"
+              data-opai-animate
+              data-delay="0.1"
+            >
+              <div class="grid grid-cols-12 gap-x-10 gap-y-8 p-6 sm:p-9 lg:p-12">
+                <div class="col-span-12 space-y-5 lg:col-span-5">
+                  {shot && (
+                    <Image
+                      src={shot}
+                      alt={agent.alt}
+                      widths={[420, 840]}
+                      sizes="(min-width: 1024px) 400px, 100vw"
+                      class="border-stroke-1/11 aspect-[4/3] w-full rounded-lg border object-cover"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                    />
+                  )}
+                  <div class="flex flex-wrap items-center gap-3">
+                    <Eyebrow>{agent.channel}</Eyebrow>
+                    {agent.demo && (
+                      <span class="font-ibm-plex-mono text-tagline-4 rounded-[4px] border border-white/12 px-2 py-1 text-white/50">
+                        {p.demo}
+                      </span>
+                    )}
+                  </div>
+                  <h2 class="text-sora-heading-5 md:text-sora-heading-4 font-normal text-white">{agent.name}</h2>
+                  <p class="text-tagline-2 font-normal text-white/60">{agent.problem}</p>
+                </div>
+
+                <div class="col-span-12 space-y-6 lg:col-span-7">
+                  <div class="space-y-2.5">
+                    <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{p.does}</p>
+                    <ul class="space-y-2">
+                      {agent.does.map((item) => (
+                        <li class="text-tagline-3 flex gap-x-2.5 font-normal text-white/60">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            aria-hidden="true"
+                            class="mt-1 shrink-0"
+                          >
+                            <path
+                              d="M3 8.5L6.2 11.5L13 4.5"
+                              stroke="#5DDCF6"
+                              stroke-width="1.4"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div class="bg-background-5 border-stroke-1/11 space-y-2 rounded-lg border p-5">
+                      <p class="font-ibm-plex-mono text-tagline-4 text-white/40 uppercase">{p.bestFor}</p>
+                      <p class="text-tagline-3 font-normal text-white/60">{agent.bestFor}</p>
+                    </div>
+                    <div class="bg-background-5 border-stroke-1/11 space-y-2 rounded-lg border p-5">
+                      <p class="font-ibm-plex-mono text-tagline-4 text-white/40 uppercase">{p.needs}</p>
+                      <ul class="text-tagline-3 space-y-1 font-normal text-white/60">
+                        {agent.needs.map((need) => (
+                          <li>· {need}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="space-y-2 rounded-lg border border-white/10 bg-white/[0.02] p-5">
+                    <p class="font-ibm-plex-mono text-tagline-4 text-white/40 uppercase">{p.limits}</p>
+                    <p class="text-tagline-3 font-normal text-white/60">{agent.limits}</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <!-- Как започва всеки агент — за да е ясно, че не се купува „AI“. -->
+    <div class="bg-background-6 border-stroke-1/11 rounded-lg border p-6 sm:p-9 lg:p-12" data-opai-animate data-delay="0.1">
+      <h2 class="text-sora-heading-5 md:text-sora-heading-4 font-normal text-white">{p.processTitle}</h2>
+      <div class="mt-8 grid grid-cols-12 gap-6">
+        {
+          AGENT_PROCESS.map((step, i) => (
+            <div class="bg-background-5 border-stroke-1/11 col-span-12 space-y-3 rounded-lg border p-6 md:col-span-6 lg:col-span-3">
+              <span class="font-ibm-plex-mono text-2xl text-white/25">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="text-sora-heading-6 font-normal text-white">{step.title}</h3>
+              <p class="text-tagline-3 font-normal text-white/60">{step.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

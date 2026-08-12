@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import SectionHeading from './SectionHeading.astro';
+import { localeOf, href as localeHref } from '../i18n/index.ts';
+import { ui, agents as agentsFor } from '../i18n/content.ts';
+import { agentShot } from '../data/agentShots.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { AGENTS, AGENTS_ON_HOME } = agentsFor(lang);
+
+const shown = AGENTS.slice(0, AGENTS_ON_HOME);
+---
+
+<section class="overflow-x-hidden py-20 md:py-24 lg:py-28">
+  <div class="main-container space-y-12">
+    <div class="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
+      <SectionHeading eyebrow="AI" title={t.carousel.title} align="left" class="lg:max-w-[520px]" />
+      <a
+        href={localeHref('/agents/', lang)}
+        class="text-tagline-3 font-sora shrink-0 text-white transition-opacity duration-300 hover:opacity-70"
+        data-opai-animate
+        data-delay="0.2"
+      >
+        {t.carousel.all(AGENTS.length)}
+      </a>
+    </div>
+  </div>
+
+  <!--
+    Хоризонтална лента със scroll-snap вместо въртележка на JavaScript:
+    работи с пръст, с колелце и с клавиатура, и без нито един килобайт скрипт.
+  -->
+  <div
+    class="mt-2 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:px-[max(1.25rem,calc((100vw-1290px)/2))]"
+    role="group"
+    aria-label={t.carousel.pick}
+  >
+    {
+      shown.map((agent, i) => {
+        const shot = agentShot(agent.id);
+        return (
+          <a
+            href={`${localeHref('/agents/', lang)}#${agent.id}`}
+            class="bg-background-6 border-stroke-1/11 group/agent relative w-[290px] shrink-0 snap-start overflow-hidden rounded-lg border transition-colors duration-500 hover:border-white/25 sm:w-[330px]"
+            data-opai-animate
+            data-delay={`${0.1 + i * 0.07}`}
+          >
+            {shot && (
+              <figure class="aspect-[4/3] w-full overflow-hidden">
+                <Image
+                  src={shot}
+                  alt={agent.alt}
+                  widths={[330, 660]}
+                  sizes="330px"
+                  class="size-full object-cover transition-transform duration-700 group-hover/agent:scale-105"
+                />
+              </figure>
+            )}
+            <div class="space-y-2.5 p-6">
+              <span class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{agent.channel}</span>
+              <h3 class="text-sora-heading-6 font-normal text-white">{agent.name}</h3>
+              <p class="text-tagline-3 font-normal text-white/60">{agent.short}</p>
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+</section>
