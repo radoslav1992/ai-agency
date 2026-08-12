@@ -3,9 +3,6 @@
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist", "public/vendor"],
   "compilerOptions": {
-    "strictNullChecks": true,
-    "paths": {
-      "~/*": ["src/*"]
-    }
+    "strictNullChecks": true
   }
 }
