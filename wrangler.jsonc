@@ -1,0 +1,41 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-agency",
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2025-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Cloudflare Pages и Workers вече са един продукт: целият предварително
+  // компилиран сайт се качва като статични файлове на Worker-а, а до самия
+  // Worker стига единствено `/api/contact`.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Адресите завършват с наклонена черта (`build.format: 'directory'`),
+    // а несъществуващата страница получава `dist/404.html` с код 404.
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // Формата за контакт минава през Cloudflare Email Routing — без външна
+  // услуга и без ключ за API. `destination_address` трябва да е ПОТВЪРДЕН
+  // получател в Email Routing и е единственият адрес, до който този Worker
+  // може да пише.
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "radoslav.dodnikov@gmail.com"
+    }
+  ],
+
+  "vars": {
+    // Къде пристигат запитванията — трябва да съвпада с destination_address.
+    "CONTACT_TO": "radoslav.dodnikov@gmail.com",
+    // Подателят. Трябва да е в зона от този акаунт с включен Email Routing.
+    "CONTACT_FROM": "forma@kova.bg"
+  }
+}
