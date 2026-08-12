@@ -2,13 +2,13 @@
 import ContactForm from './ContactForm.astro';
 import { localeOf } from '../i18n/index.ts';
 import { PAGES } from '../i18n/pages.ts';
-import { ui, owner, location } from '../i18n/content.ts';
+import { ui, location, brand } from '../i18n/content.ts';
 import { SITE } from '../data/site.mjs';
 
 const lang = localeOf(Astro.currentLocale);
 const p = PAGES[lang].contact;
 const t = ui(lang);
-const me = owner(lang);
+const name = brand(lang).shortName;
 ---
 
 <section class="py-16 lg:py-24">
@@ -21,23 +21,13 @@ const me = owner(lang);
       <div class="bg-background-6 border-stroke-1/11 space-y-4 rounded-lg border p-6 lg:p-8">
         <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{p.directTitle}</p>
         <div class="space-y-1">
-          <p class="text-sora-heading-6 font-sora font-normal text-white">{me.name}</p>
-          <p class="text-tagline-3 font-normal text-white/50">{me.role}</p>
+          <p class="text-sora-heading-6 font-sora font-normal text-white">{name}</p>
+          <p class="text-tagline-3 font-normal text-white/50">{t.footer.tagline}</p>
         </div>
         <ul class="space-y-2.5">
           <li>
-            <a href={`mailto:${SITE.owner.email}`} class="text-tagline-3 text-white/70 transition-colors hover:text-white">
-              {SITE.owner.email}
-            </a>
-          </li>
-          <li>
-            <a
-              href={SITE.owner.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-tagline-3 text-white/70 transition-colors hover:text-white"
-            >
-              {SITE.owner.linkedinLabel}
+            <a href={`mailto:${SITE.email}`} class="text-tagline-3 text-white/70 transition-colors hover:text-white">
+              {SITE.email}
             </a>
           </li>
           <li class="text-tagline-3 text-white/50">{location(lang)}</li>

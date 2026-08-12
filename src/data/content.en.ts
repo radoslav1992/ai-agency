@@ -1,242 +1,176 @@
 /**
- * English mirror of `content.ts`. Same shapes, same order — the components
- * pick one or the other by locale and never branch on language themselves.
+ * English mirror of `content.ts`.
  *
- * Two things are deliberately NOT literal translations:
- *
- *   1. Prices. The Bulgarian numbers are set for the Bulgarian market. The
- *      same figures read as junior-rate abroad and pull in buyers shopping
- *      on price, which is the wrong end of the market for a one-person
- *      studio with limited hours.
- *
- *   2. Anything that only makes sense inside Bulgaria — a Bulgarian
- *      university, clients "across the country", the free site analyser
- *      that exists only in Bulgarian.
+ * The same rule applies: no result is claimed here that has not been
+ * measured with a client. Until there is a concrete case, the copy says
+ * what the system does — not what it has achieved.
  */
 
-import type { Plan, ProcessStep, Service } from './content.ts';
+import type { Service, ProcessStep, Plan, Highlight } from './content.ts';
 
 export const SERVICES: Service[] = [
   {
     number: '01',
-    title: 'AI agents for the work that repeats',
+    title: 'AI agents for the channels your customers actually use',
     problem:
-      'Hours disappear into routine every day: calls nobody picks up, the same questions over email and chat, invoices and quotes retyped by hand, appointments that get forgotten. Separately, minutes. Together, a full-time position a day.',
+      'Every day disappears into routine: missed calls, the same questions over email and chat, invoices retyped by hand, appointments forgotten. Separately, minutes. Together, a full-time job a day.',
     solution:
-      'A specialised AI agent takes one of those channels end to end — voice, chat, email or documents. It works strictly from your own material, cites the source of every answer, keeps a record, and hands over to a person the moment the case needs judgement.',
+      'A specialised agent takes over one channel end to end — voice, chat, inbox or documents. It works strictly from your material, cites the source of every answer, keeps a record, and hands over to a person the moment the case needs judgement.',
     changes: [
       {
-        title: 'It never clocks off',
-        body: 'Customers get an answer, service and a booked slot around the clock — in the evening, on a Saturday, and while the line is busy.',
+        title: 'Runs around the clock',
+        body: 'Customers get an answer, service and a booked slot 24/7 — in the evening, on Saturday and while the line is busy.',
       },
       {
         title: 'Your team gets its hours back',
-        body: 'People stop retyping and stop repeating themselves, and go back to the deals and decisions that actually need them.',
+        body: 'People stop retyping and repeating themselves, and focus on the deals and decisions instead.',
       },
       {
-        title: 'Control and privacy stay yours',
-        body: 'The agent stops where human judgement begins, and for sensitive data the model can run entirely on your own infrastructure.',
+        title: 'You stay in control',
+        body: 'The agent stops where human judgement begins, and for sensitive data the model can run entirely on your side.',
       },
     ],
-    link: { href: '/agents/', label: 'See the ready-made agents →' },
-    variant: 'dark',
+    link: { href: '/agents/', label: 'See the ready-made agents' },
   },
   {
     number: '02',
-    title: 'Automating the tasks that repeat',
+    title: 'Automation of repetitive processes',
     problem:
-      'Someone copies data from emails into a spreadsheet. Every day, two hours at a time, with mistakes that only surface a month later.',
+      'Someone copies data from emails into a spreadsheet. Every day, two hours at a time, with mistakes that surface a month later.',
     solution:
-      'The system takes over the entry, the recognition and the preparation. A person reviews and approves.',
-    change:
-      'Processing time drops. Transcription errors disappear — errors of judgement do not, which is why a person stays at the end of the line.',
+      'The system takes over the entry, the recognition and the preparation. A person reviews and approves — they do not type.',
     points: [
-      'Less manual data entry',
-      'A traceable record of who approved what, and when',
-      'It runs even when nobody is there to do it',
+      'Less manual entry',
+      'A trace of who approved what, and when',
+      'It runs even when nobody is free to do it',
     ],
   },
   {
     number: '03',
-    title: 'Internal systems and client portals',
+    title: 'AI over your company documents',
     problem:
-      'The business has outgrown spreadsheets, but off-the-shelf CRM and ERP are heavy, expensive and shaped nothing like the way you actually work. The process lives in spreadsheets, email threads and "can you send me that again".',
+      'The answer is in the contract, the handbook or an old email. The person who knows where is on holiday — and everyone waits for them.',
     solution:
-      'One application built around your process — users, roles, reporting, and connections to the tools you already run.',
-    change: 'The information sits in one place and stops depending on who saved it in which file.',
+      'Plain-language search across your contracts, procedures and minutes, with a quote and a link to the exact document.',
     points: [
-      'One system instead of scattered spreadsheets',
+      'Answers cite their source, so they can be checked',
       'Different permissions for different people',
-      'Integrations with the services you already use',
+      'PDF, Word, Excel and scanned documents',
     ],
   },
-];
-
-export const SECONDARY_SERVICES: Service[] = [
   {
     number: '04',
-    title: 'Business websites',
+    title: 'Connecting the systems you already run',
     problem:
-      "The site was built five years ago. It loads slowly, it doesn't show up in search, and you can't change a phone number without emailing someone.",
-    solution: 'A fast site you update yourself. No heavy plugins that break on every update.',
-    change: "You can see what's wrong with your current site before you even ask me.",
+      'AI is only useful if it reaches the data. And the data sits in the CRM, the accounting system and the inbox.',
+    solution:
+      'We build the connections between your tools so the data flows on its own instead of being carried across by hand.',
     points: [
-      'A design made for you, not a theme from a catalogue',
-      'Technical SEO foundations and a mobile version',
-      'Training so you can update it yourself',
-      'Managed hosting for the first year',
+      'CRM, ERP, accounting, calendar, chat',
+      'Webhooks and APIs to in-house systems',
+      'Monitoring and alerts when something stops',
     ],
   },
   {
     number: '05',
-    title: 'Generative AI training',
-    body: 'The same material I teach at university, with your documents and your processes in the exercises.',
+    title: 'Training for your team',
+    body: 'Hands-on generative-AI training — with your documents and your processes in the exercises, not generic examples.',
   },
 ];
 
 export const PROCESS: ProcessStep[] = [
   {
     number: '01',
-    title: 'First call',
-    body: "Thirty minutes, free. You show me how the process runs today. I tell you whether automating it makes sense — and if it doesn't, I say so.",
+    title: 'A call and one process',
+    body: '30 minutes, free. We look at which channel costs you the most time — phone, inbox, documents. We start with that one only.',
   },
   {
     number: '02',
     title: 'A one-page quote',
-    body: 'Scope, deadline and price. No vague extras and no important terms left for later.',
+    body: 'Scope, deadline and price. Running costs for servers, models and third-party services stated upfront, not afterwards.',
   },
   {
     number: '03',
-    title: 'Work in small stages',
-    body: 'You see a working version while I build it, not at the end. AI projects start with a limited pilot before you commit a serious budget.',
+    title: 'A pilot on real data',
+    body: 'The agent learns from your material and runs for a few weeks alongside a person, so the results can be compared.',
   },
   {
     number: '04',
     title: 'Launch and support',
-    body: 'Documentation, every credential, and training so you can run the system without me. What I cover after launch is written in the quote.',
+    body: 'We go live, watch it and keep training it. You see every conversation and can switch it off at any time.',
   },
 ];
 
 export const TERMS: { title: string; body: string }[] = [
   {
-    title: 'Who owns the code?',
-    body: 'After the final payment, the code, the design and the project data are yours.',
+    title: 'Who owns the solution?',
+    body: 'After the final payment the code, the configuration and the project data are yours.',
   },
   {
     title: 'How does payment work?',
-    body: 'In stages, against an invoice. The exact schedule is in the quote.',
+    body: 'In stages, against an invoice. The exact schedule is written into the quote.',
   },
   {
     title: 'What if the scope changes?',
-    body: 'If new requirements come up, I first tell you how they affect the deadline and the price. I start work on them only after your go-ahead.',
+    body: 'If new requirements appear, we first tell you how they affect the deadline and the price. Work on them starts only after your go-ahead.',
   },
   {
-    title: 'What does support include?',
-    body: 'Monitoring, bug fixing and the small changes we agreed. The exact scope is written in the quote.',
+    title: 'What does support cover?',
+    body: 'Monitoring, fixing errors and retraining the agent. The exact scope is written into the quote.',
   },
   {
     title: 'How is data protected?',
-    body: 'I sign an NDA where needed. For sensitive data I use local models or infrastructure you control.',
+    body: 'We sign an NDA where needed. For sensitive data we use local models or infrastructure you control.',
   },
   {
-    title: 'How is the project handed over?',
-    body: 'The code goes into your repository, with documentation, every credential and training on running the system.',
+    title: 'What if the AI gets it wrong?',
+    body: 'That is why every project starts with a pilot that measures accuracy. Systems are designed so a person can check the result before it is used for an important decision.',
   },
 ];
 
-export const ABOUT = {
-  heading: "Hello — I'm Radoslav.",
-  paragraphs: [
-    'I founded Kova Studio. For over six years I have been building corporate software — internal systems and AI over real business data. I teach generative AI and natural language processing at university and I am a PhD candidate in computer science.',
-    'I lead every project myself. When a job needs design, security or marketing, I bring in people I have worked with before — but I stay the person you deal with, and the responsibility stays mine.',
-    'I take on few projects at a time. Otherwise I cannot know them in detail, and that detail is precisely what you are buying.',
-  ],
-  stats: [
-    { value: '6+', label: 'years as a software engineer' },
-    { value: 'PhD candidate', label: 'in computer science, university lecturer in generative AI' },
-  ],
-  skills: [
-    'AI agents',
-    'Automation',
-    'Internal systems',
-    'RAG',
-    'Generative AI',
-    'SEO & GEO',
-  ],
-  imageCaption: 'Speaking at a technical conference in Sofia',
-};
-
-/**
- * Prices are higher than the Bulgarian ones, on purpose.
- *
- * €1,500 for an AI pilot is a sensible entry price in Sofia. Presented to a
- * buyer in London, Munich or Amsterdam the same number reads as either
- * inexperience or a hidden catch, and it attracts the price-shopping end of
- * the market — the worst possible fit for a studio whose real constraint is
- * hours, not leads.
- */
 export const PLANS: Plan[] = [
   {
-    name: 'AI pilot',
-    pitch: 'A bounded project that proves whether the idea works on real data, before you invest in a full build.',
-    price: 'from €3,500',
+    name: 'Pilot',
+    pitch: 'A bounded project that tests whether the idea works on real data, before you invest in the full build.',
+    price: 'from €1,500',
     features: [
-      'A pilot on your own documents and processes',
+      'One channel on your real data',
       'Answers with cited sources',
-      'A local model where the data is sensitive',
-      'Measurement of the time actually saved',
-      'A straight recommendation: is this worth continuing',
+      'A local model if the data is sensitive',
+      'Measurement of cases handled and mistakes made',
+      'A straight recommendation on whether to continue',
     ],
   },
   {
-    name: 'Internal system',
-    pitch: 'One system instead of spreadsheets, email threads and information moved by hand.',
-    price: 'MVP from €8,000',
+    name: 'Rollout',
+    pitch: 'The agent goes live, wired into your systems, with monitoring and ongoing training.',
+    price: 'from €4,000',
+    featured: true,
+    badge: 'Most chosen',
     features: [
-      'Process analysis and a prototype',
-      'Users, roles, reporting',
-      'Integrations with your existing systems',
+      'Live in real operation',
+      'Integrations with CRM, inbox, calendar, chat',
+      'A dashboard of conversations and handovers',
+      'Retraining on the real cases',
       'Three months of support included',
     ],
   },
   {
-    name: 'Business website',
-    pitch: 'Up to five core pages, built for mobile and easy to keep updated.',
-    price: 'typically €2,500–6,000',
+    name: 'Support',
+    pitch: 'A monthly arrangement for companies where the agent is already part of daily work.',
+    price: 'from €400/mo',
     features: [
-      'A design made for you',
-      'Mobile version and technical SEO foundations',
-      'Contact form and map',
-      'Training so you can update it',
-      'Managed hosting for the first year included',
+      'Monitoring and alerts when something breaks',
+      'Retraining as new cases appear',
+      'A report of what the agent handled',
+      'Priority response during an incident',
     ],
   },
 ];
 
 export const PRICING_PROMO: string | null = null;
 
-export const NEEDS = [
-  'An AI agent for a repeating channel (phone, inbox, documents)',
-  'Automating a repetitive process',
-  'An internal system or client portal',
-  'A business website',
-  'Training or consulting',
-  "I'm not sure yet",
-];
-
-import type { Highlight } from './content.ts';
-
-/**
- * English mirror of the "why me" strip. Same rule: nothing here is a new
- * promise — every line restates something already said in the services,
- * the agents or the process.
- */
 export const HIGHLIGHTS: Highlight[] = [
-  {
-    icon: 'person',
-    title: 'You work with me',
-    body: 'No account manager between you and the person writing the code.',
-  },
   {
     icon: 'flask',
     title: 'Pilot first, budget after',
@@ -262,4 +196,20 @@ export const HIGHLIGHTS: Highlight[] = [
     title: 'Your data stays yours',
     body: 'For sensitive data the model runs in your own infrastructure and nothing leaves it.',
   },
+  {
+    icon: 'person',
+    title: 'A person stays at the end',
+    body: 'The agent stops where judgement begins and hands the case to a human.',
+  },
+];
+
+export { INTEGRATIONS } from './content.ts';
+
+export const NEEDS = [
+  'An AI agent for phone, chat or inbox',
+  'AI over our company documents',
+  'Automation of a repetitive process',
+  'Connecting the systems we run',
+  'Training for the team',
+  'Not sure yet',
 ];

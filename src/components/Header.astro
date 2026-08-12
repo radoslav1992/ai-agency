@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-import logoMark from '../assets/brand/logo-mark.webp';
 import Button from './Button.astro';
 import { localeOf, href as localeHref, pathForLocale, hasTranslation } from '../i18n/index.ts';
 import { nav, cta, ui, brand } from '../i18n/content.ts';
@@ -37,9 +35,9 @@ const switchTitle = otherLang === 'bg' ? 'Виж на български' : 'Vie
     <div class="bg-background-13 relative overflow-visible rounded-lg px-3 py-3 lg:py-0 xl:px-5">
       <div class="flex items-center justify-between">
         <a href={localeHref('/', lang)} class="flex items-center gap-x-2.5">
-          <Image src={logoMark} alt="" width={36} height={36} class="size-9 shrink-0" loading="eager" />
-          <span class="font-sora text-tagline-1 leading-none font-medium text-white">
-            {name.shortName}<span class="text-white/50"> {name.suffix}</span>
+          <img src="/images/logo/aia-mark.svg" alt="" width="36" height="36" class="size-9 shrink-0" />
+          <span class="font-sora text-tagline-1 leading-none font-medium tracking-[0.14em] text-white">
+            {name.shortName}
           </span>
           <span class="sr-only">{t.header.home}</span>
         </a>
@@ -99,8 +97,8 @@ const switchTitle = otherLang === 'bg' ? 'Виж на български' : 'Vie
   >
     <div class="flex items-center justify-between">
       <a href={localeHref('/', lang)} class="flex items-center gap-x-2.5">
-        <Image src={logoMark} alt="" width={32} height={32} class="size-8 shrink-0" />
-        <span class="font-sora text-tagline-2 font-medium text-white">{name.shortName} {name.suffix}</span>
+        <img src="/images/logo/aia-mark.svg" alt="" width="32" height="32" class="size-8 shrink-0" />
+        <span class="font-sora text-tagline-2 font-medium text-white">{name.shortName}</span>
       </a>
       <button
         type="button"

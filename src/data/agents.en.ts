@@ -33,7 +33,6 @@ export const AGENTS: Agent[] = [
     ],
     limits:
       'It does not diagnose, does not give medical or legal advice and does not negotiate prices. On those it transfers to a person. Calls are recorded only after a clear announcement at the start.',
-    demo: true,
   },
   {
     id: 'sms',
@@ -72,7 +71,6 @@ export const AGENTS: Agent[] = [
     needs: ['Access to the site and the documents it should answer from', 'Where enquiries should go'],
     limits:
       'It answers only from the material it was given. If the answer is not in there, it says so and offers a contact — instead of inventing one.',
-    demo: true,
   },
   {
     id: 'documents',

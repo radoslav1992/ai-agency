@@ -51,12 +51,11 @@ export function href(path: string, locale: Locale): string {
 /**
  * Страниците, които съществуват и на двата езика.
  *
- * Анализаторът, блогът и /research са само на български. Без този списък
- * `hreflang` сочеше към `/en/analyzer/` и подобни, които връщат 404 — а
- * `hreflang` към несъществуваща страница е грешка, която Search Console
- * отчита. Същият списък пази и превключвателя да не води в нищото.
+ * Целият сайт е двуезичен, но списъкът остава: `hreflang` към
+ * несъществуваща страница е грешка, която Search Console отчита, а
+ * същият списък пази и превключвателя в хедъра да не води в 404.
  */
-const TRANSLATED = ['/', '/agents/', '/projects/', '/contact/', '/terms/', '/privacy/', '/cookies/'];
+const TRANSLATED = ['/', '/agents/', '/contact/', '/terms/', '/privacy/', '/cookies/'];
 
 /** Пътят без езиков префикс — за сравнение между двата езика. */
 export function barePath(pathname: string): string {

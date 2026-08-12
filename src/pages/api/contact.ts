@@ -26,19 +26,19 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const ERRORS = {
   bg: {
     badRequest: 'Невалидно запитване.',
-    name: 'Моля, попълни името си.',
-    email: 'Моля, попълни валиден имейл адрес.',
-    message: 'Моля, разкажи накратко за проекта.',
-    notConfigured: 'Формата още не е свързана с имейл. Пиши ми директно на имейла отдолу.',
-    send: 'Не успях да изпратя запитването. Пиши ми директно на имейла отдолу.',
+    name: 'Моля, попълнете името си.',
+    email: 'Моля, попълнете валиден имейл адрес.',
+    message: 'Моля, разкажете накратко за проекта.',
+    notConfigured: 'Формата още не е свързана с имейл. Пишете ни директно на имейла отдолу.',
+    send: 'Не успяхме да изпратим запитването. Пишете ни директно на имейла отдолу.',
   },
   en: {
     badRequest: 'Invalid request.',
     name: 'Please fill in your name.',
     email: 'Please fill in a valid email address.',
-    message: 'Please tell me briefly about the project.',
-    notConfigured: 'The form is not wired to an inbox yet. Email me directly at the address below.',
-    send: 'I could not send your enquiry. Email me directly at the address below.',
+    message: 'Please tell us briefly about the project.',
+    notConfigured: 'The form is not wired to an inbox yet. Email us directly at the address below.',
+    send: 'We could not send your enquiry. Email us directly at the address below.',
   },
 } as const;
 
@@ -147,7 +147,7 @@ async function sendEmail(env: Env, data: Submission): Promise<void> {
   ].join('\r\n');
 
   const msg = createMimeMessage();
-  msg.setSender({ name: 'Кова студио', addr: from });
+  msg.setSender({ name: 'AIA', addr: from });
   msg.setRecipient(to);
   msg.setSubject(headerSafe(`${labels.subject} ${name}${data.need ? ` — ${need}` : ''}`));
   /* Позволява да се отговори директно на човека. Тук се иска Mailbox, а не

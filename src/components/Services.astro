@@ -7,14 +7,14 @@ import { ui, content } from '../i18n/content.ts';
 
 const lang = localeOf(Astro.currentLocale);
 const t = ui(lang);
-const { SERVICES, SECONDARY_SERVICES } = content(lang);
+const { SERVICES } = content(lang);
 
 /**
  * Бенто решетката на шаблона: два широки реда отгоре, три тесни отдолу.
  * Еднаквите по размер карти изглеждат като таблица; разликата в ширината е
  * това, което прави секцията да изглежда проектирана, а не изсипана.
  */
-const all = [...SERVICES, ...SECONDARY_SERVICES];
+const all = SERVICES;
 const cards = all.map((service, i) => ({
   service,
   wide: i < 2,
