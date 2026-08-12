@@ -2,25 +2,19 @@
  * Единственото място, което знае кой набор данни отива с кой език.
  *
  * Компонентите викат `content(lang)` и получават същите имена, каквито
- * внасяха преди — `SERVICES`, `PROCESS`, `TERMS`. Така преминаването към
- * двуезичие не преправя нито един компонент по същество, а само подменя
- * източника.
+ * биха ги внасяли директно — `SERVICES`, `PROCESS`, `TERMS`. Така добавянето на език
+ * не преправя нито един компонент, а само подменя източника.
  */
 
 import * as bgContent from '../data/content.ts';
 import * as enContent from '../data/content.en.ts';
 import * as bgAgents from '../data/agents.ts';
 import * as enAgents from '../data/agents.en.ts';
-import * as bgProjects from '../data/projects.ts';
-import * as bgCases from '../data/cases.ts';
-import * as enCases from '../data/cases.en.ts';
-import * as enProjects from '../data/projects.en.ts';
 import { UI } from './ui.ts';
 import {
   META,
   NAV_BY_LOCALE,
   CTA_BY_LOCALE,
-  OWNER_BY_LOCALE,
   LEGAL_NAME_BY_LOCALE,
   BRAND_BY_LOCALE,
   LOCATION_BY_LOCALE,
@@ -35,24 +29,8 @@ export function agents(locale: Locale) {
   return locale === 'en' ? enAgents : bgAgents;
 }
 
-export function projects(locale: Locale) {
-  return locale === 'en' ? enProjects : bgProjects;
-}
-
-export function cases(locale: Locale) {
-  return locale === 'en' ? enCases : bgCases;
-}
-
 export function ui(locale: Locale) {
   return UI[locale];
-}
-
-export function owner(locale: Locale) {
-  return OWNER_BY_LOCALE[locale] ?? OWNER_BY_LOCALE.bg;
-}
-
-export function legalName(locale: Locale) {
-  return LEGAL_NAME_BY_LOCALE[locale] ?? LEGAL_NAME_BY_LOCALE.bg;
 }
 
 export function brand(locale: Locale) {
@@ -61,6 +39,10 @@ export function brand(locale: Locale) {
 
 export function location(locale: Locale) {
   return LOCATION_BY_LOCALE[locale] ?? LOCATION_BY_LOCALE.bg;
+}
+
+export function legalName(locale: Locale) {
+  return LEGAL_NAME_BY_LOCALE[locale] ?? LEGAL_NAME_BY_LOCALE.bg;
 }
 
 export function meta(locale: Locale) {

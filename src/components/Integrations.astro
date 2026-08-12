@@ -1,0 +1,58 @@
+---
+import { localeOf } from '../i18n/index.ts';
+import { ui, content } from '../i18n/content.ts';
+
+/**
+ * Редът с кръгли значки от шаблона (секция „Seamlessly Connected“).
+ *
+ * Логата са тези, които идват с шаблона — единствените истински картинки в
+ * него. Списъкът стои в `content.ts`, за да се реже и допълва там, а не в
+ * разметката.
+ *
+ * Анимацията `data-client-reveal` на шаблона нарочно НЕ се ползва: тя
+ * подменя иконите на случаен принцип от общ пул и показва едно и също лого
+ * на две места. При измислени лога това е ефект; при истински — грешка.
+ */
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { INTEGRATIONS } = content(lang);
+---
+
+<section class="py-20 lg:py-25">
+  <div class="main-container space-y-11 md:space-y-14">
+    <div class="mx-auto max-w-[560px] space-y-3 text-center">
+      <h2
+        data-opai-animate
+        data-delay="0.1"
+        class="text-sora-heading-5 sm:text-sora-heading-3 lg:text-sora-heading-2 text-white"
+      >
+        {t.integrations.title}
+      </h2>
+      <p data-opai-animate data-delay="0.2" class="text-tagline-2 font-inter-tight font-normal text-white/60">
+        {t.integrations.note}
+      </p>
+    </div>
+
+    <div
+      class="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2.5 md:gap-x-3.5 md:gap-y-3.5 xl:gap-x-6"
+    >
+      {
+        INTEGRATIONS.map((item, i) => (
+          <figure
+            class="bg-background-4 flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full lg:size-20 xl:size-25"
+            data-opai-animate
+            data-delay={`${0.06 * (i + 1)}`}
+          >
+            <img
+              src={`/images/icons/${item.file}.svg`}
+              alt={item.name}
+              class="size-6 object-contain lg:size-9 xl:size-12"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

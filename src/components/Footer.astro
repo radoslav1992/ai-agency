@@ -1,14 +1,11 @@
 ---
-import { Image } from 'astro:assets';
-import logoMark from '../assets/brand/logo-mark.webp';
 import { localeOf, href as localeHref } from '../i18n/index.ts';
-import { nav, ui, owner, legalName, brand, location } from '../i18n/content.ts';
+import { nav, ui, legalName, brand, location } from '../i18n/content.ts';
 import { SITE } from '../data/site.mjs';
 
 const lang = localeOf(Astro.currentLocale);
 const t = ui(lang);
 const links = nav(lang);
-const me = owner(lang);
 const legal = legalName(lang);
 const name = brand(lang);
 const place = location(lang);
@@ -38,17 +35,13 @@ const legalLinks = [
         <div class="grid grid-cols-12 gap-y-10 gap-x-8">
           <div class="col-span-12 space-y-4 lg:col-span-4">
             <a href={localeHref('/', lang)} class="flex items-center gap-x-2.5">
-              <Image src={logoMark} alt="" width={36} height={36} class="size-9 shrink-0" />
-              <span class="font-sora text-tagline-1 leading-none font-medium text-white">
-                {name.shortName}<span class="text-white/50"> {name.suffix}</span>
+              <img src="/images/logo/aia-mark.svg" alt="" width="36" height="36" class="size-9 shrink-0" />
+              <span class="font-sora text-tagline-1 leading-none font-medium tracking-[0.14em] text-white">
+                {name.shortName}
               </span>
             </a>
-            <p class="text-tagline-3 max-w-[320px] font-normal text-white/50">
-              {me.name} · {me.role}
-            </p>
-            <p class="text-tagline-3 max-w-[320px] font-normal text-white/50">
-              {place} {t.footer.reach}
-            </p>
+            <p class="text-tagline-3 max-w-[320px] font-normal text-white/50">{t.footer.tagline}</p>
+            <p class="text-tagline-3 max-w-[320px] font-normal text-white/50">{place}</p>
             <p class="text-tagline-3 max-w-[320px] font-normal text-white/50">{t.footer.promise}</p>
           </div>
 
@@ -93,21 +86,14 @@ const legalLinks = [
             <ul class="mt-2">
               <li class="py-2">
                 <a
-                  href={`mailto:${SITE.owner.email}`}
+                  href={`mailto:${SITE.email}`}
                   class="text-tagline-3 inline-block font-normal text-white/50 transition-colors duration-500 hover:text-white"
                 >
-                  {SITE.owner.email}
+                  {SITE.email}
                 </a>
               </li>
               <li class="py-2">
-                <a
-                  href={SITE.owner.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-tagline-3 inline-block font-normal text-white/50 transition-colors duration-500 hover:text-white"
-                >
-                  LinkedIn
-                </a>
+                <span class="text-tagline-3 inline-block font-normal text-white/50">{place}</span>
               </li>
             </ul>
           </div>
