@@ -1,0 +1,19 @@
+# Cloudflare чете този файл при качването на статичните файлове.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# Всичко в /_astro/ носи хеш в името си — променѝ ли се файлът, сменя се и
+# адресът. Затова може да се кешира завинаги.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=604800
+
+/vendor/*
+  Cache-Control: public, max-age=604800

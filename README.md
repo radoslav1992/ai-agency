@@ -13,15 +13,18 @@
 | [Tailwind CSS v4](https://tailwindcss.com) | `@theme` блокът в `src/styles/global.css` възпроизвежда точките на шаблона |
 | `@fontsource-variable/*` | шрифтовете се сервират от домейна, без заявка към Google Fonts |
 | GSAP + `public/vendor/template.js` | анимационният двигател на шаблона, както е в оригинала |
+| `@astrojs/cloudflare` + Wrangler | пускане като Worker със статични файлове |
 
-Всичко се компилира предварително — няма сървър, няма база данни.
+Всичко се компилира предварително с изключение на `/api/contact` — няма база
+данни и няма нищо, което да се рендира при заявка.
 
 ```bash
 npm install
 npm run dev      # http://localhost:4321
 npm run check    # astro check — типове и разметка
 npm run build    # dist/
-npm run preview  # преглед на построеното
+npm run preview  # astro build + wrangler dev — както е на Cloudflare
+npm run deploy   # astro build + wrangler deploy
 ```
 
 ## Двуезичие
@@ -87,11 +90,59 @@ npm run preview  # преглед на построеното
 
 ## Формата за контакт
 
-Сайтът е статичен, затова формата сглобява писмото и го отваря в пощенския
-клиент на посетителя. Когато има адрес на приемащ endpoint (Formspree, Cloudflare
-Worker и подобни), скриптът в долната част на `src/components/ContactForm.astro`
-се заменя с обикновен `fetch` към него — разметката, валидацията и капанът за
-ботове вече са готови за това.
+`src/pages/api/contact.ts` е единственият маршрут, който не се компилира
+предварително (`export const prerender = false`) — той работи във Worker-а и
+изпраща писмото през **Cloudflare Email Routing**, без външна услуга и без ключ
+за API.
+
+- Валидацията е и от страна на сървъра, а съобщенията за грешка са на езика на
+  формата — скритото поле `lang` пътува със заявката.
+- Капанът за ботове (`company-website`) връща „изпратено“ и изхвърля писмото.
+- Приемат се само стойности за „От какво имаш нужда?“, които формата на този
+  език наистина предлага.
+- `Reply-To` е адресът на подателя, за да се отговаря директно от пощата.
+- Без JavaScript формата работи като обикновен `POST` и Worker-ът връща 303 към
+  `/contact/?sent=1`; скриптът само прихваща изпращането, за да не се презарежда
+  страницата. Заявки от чужд домейн се отхвърлят от вградената защита на Astro.
+
+Тялото се кодира в base64 ръчно — `mimetext` обявява кодирането, но не го
+прилага, а стойността му по подразбиране би обявила кирилско писмо за ASCII.
+
+## Пускане на Cloudflare
+
+Сайтът се качва като **Worker със статични файлове** (Pages и Workers вече са
+един продукт): цялото `dist/` става статика, а до кода стига единствено
+`/api/contact`.
+
+```bash
+npx wrangler login
+npm run preview   # astro build + wrangler dev — Worker-ът върви локално
+npm run deploy    # astro build + wrangler deploy
+```
+
+Настройките са в `wrangler.jsonc`. Преди първото пускане:
+
+1. **Email Routing** — в Cloudflare, за зоната на домейна, включи Email Routing
+   и потвърди адреса получател. Той трябва да съвпада едновременно с
+   `send_email.destination_address` и с `vars.CONTACT_TO`; писмото няма да
+   тръгне към непотвърден адрес.
+2. **Подател** — `vars.CONTACT_FROM` трябва да е адрес в зона от същия акаунт с
+   включен Email Routing (например `forma@kova.bg`).
+3. **Домейн** — добави потребителски домейн на Worker-а и смени `SITE.url` в
+   `src/data/site.mjs`; от него се генерират `canonical`, `hreflang`, `og:url`
+   и картата на сайта.
+4. **Аналитика** — `SITE.gaId` е ID-то на Google Analytics. `null` изключва и
+   аналитиката, и банера за бисквитки.
+
+`public/_headers` задава заглавките: `Cache-Control: immutable` за хешираните
+файлове в `/_astro/`, плюс `nosniff`, `Referrer-Policy`, `X-Frame-Options`,
+`Permissions-Policy` и HSTS. Адресите завършват с наклонена черта
+(`html_handling: "auto-trailing-slash"`), а несъществуваща страница получава
+`404.html` с код 404.
+
+За пускане при всеки push вместо от команден ред: в Cloudflare → Workers &
+Pages → Connect to Git, команда за компилиране `npm run build`, изходна папка
+`dist`.
 
 ## Аналитика и бисквитки
 

@@ -136,6 +136,8 @@ export const UI = {
       sent: 'Изпратено ✓',
       orEmail: 'Или просто ми пиши на ',
       thanks: 'Благодаря! Получих запитването и ще ти отговоря до един работен ден.',
+      /** Показва се, когато нищо по-конкретно не е дошло от сървъра. */
+      error: 'Нещо се обърка при изпращането. Пиши ми директно на имейла отгоре.',
       /** `{url}` се замества с адреса, дошъл от анализатора. */
       prefill: 'Проверих {url} с безплатната проверка на сайтове. Кои три неща да оправя първо?',
     },
@@ -272,6 +274,7 @@ export const UI = {
       sent: 'Sent ✓',
       orEmail: 'Or just email me at ',
       thanks: 'Thank you. I have your enquiry and will reply within one working day.',
+      error: 'Something went wrong while sending. Email me directly at the address above.',
       prefill: 'I checked {url} with the free site audit. Which three things should I fix first?',
     },
 
