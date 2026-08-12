@@ -1,4 +1,5 @@
 ---
+import Glow from '../../components/Glow.astro';
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -38,14 +39,7 @@ const structuredData = {
 
 <BaseLayout title={post.data.title} description={post.data.excerpt}>
   <section class="relative overflow-hidden pt-32 pb-12 sm:pt-40 lg:pt-44">
-    <img
-      src="/images/gradient/opai-28.webp"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute -top-[45%] left-1/2 h-[720px] w-[720px] max-w-none -translate-x-1/2 object-contain opacity-50"
-      loading="eager"
-      decoding="async"
-    />
+    <Glow src="opai-28" at="top" class="h-[780px] w-[780px] opacity-70" eager />
     <div class="main-container relative z-2 max-w-[760px] space-y-5">
       <a
         href={localeHref('/blog/', lang)}

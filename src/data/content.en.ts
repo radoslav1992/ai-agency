@@ -223,3 +223,43 @@ export const NEEDS = [
   'Training or consulting',
   "I'm not sure yet",
 ];
+
+import type { Highlight } from './content.ts';
+
+/**
+ * English mirror of the "why me" strip. Same rule: nothing here is a new
+ * promise — every line restates something already said in the services,
+ * the agents or the process.
+ */
+export const HIGHLIGHTS: Highlight[] = [
+  {
+    icon: 'person',
+    title: 'You work with me',
+    body: 'No account manager between you and the person writing the code.',
+  },
+  {
+    icon: 'flask',
+    title: 'Pilot first, budget after',
+    body: 'A small project on real data tests the idea before serious money goes in.',
+  },
+  {
+    icon: 'target',
+    title: 'Price and deadline in the quote',
+    body: 'Scope, deadline and price on one page. No vague extras later.',
+  },
+  {
+    icon: 'clock',
+    title: 'Runs around the clock',
+    body: 'Agents take the calls and enquiries in the evening, on Saturday and while the line is busy.',
+  },
+  {
+    icon: 'document',
+    title: 'Answers with a source',
+    body: 'Every answer points at the document and page it came from, so it can be checked.',
+  },
+  {
+    icon: 'shield',
+    title: 'Your data stays yours',
+    body: 'For sensitive data the model runs in your own infrastructure and nothing leaves it.',
+  },
+];

@@ -1,4 +1,5 @@
 ---
+import Glow from './Glow.astro';
 import Eyebrow from './Eyebrow.astro';
 import Button from './Button.astro';
 import { localeOf, href as localeHref } from '../i18n/index.ts';
@@ -16,14 +17,7 @@ const t = ui(lang);
       data-delay="0.1"
     >
       <div class="bg-background-6 relative overflow-hidden rounded-lg">
-        <img
-          src="/images/gradient/opai-26.webp"
-          alt=""
-          aria-hidden="true"
-          class="pointer-events-none absolute -top-[35%] -right-[8%] h-[420px] w-[420px] max-w-none object-contain opacity-70"
-          loading="lazy"
-          decoding="async"
-        />
+        <Glow src="opai-26" at="top-right" class="h-[520px] w-[520px] opacity-90" />
         <div class="relative z-2 grid grid-cols-12 items-center gap-x-10 gap-y-7 p-6 sm:p-9 lg:p-12">
           <div class="col-span-12 space-y-4 lg:col-span-8">
             <Eyebrow>{t.pilot.eyebrow}</Eyebrow>

@@ -1,0 +1,41 @@
+---
+import Icon from './Icon.astro';
+import { localeOf } from '../i18n/index.ts';
+import { content } from '../i18n/content.ts';
+
+/**
+ * Решетката без рамки от шаблона: само тънки разделителни линии, икона,
+ * центрирано заглавие и един ред текст. Няма карти, няма фон — секцията
+ * стои като поемане на въздух между две плътни секции.
+ */
+const lang = localeOf(Astro.currentLocale);
+const { HIGHLIGHTS } = content(lang);
+---
+
+<section class="py-16 md:py-20 lg:py-24">
+  <div class="main-container">
+    <!--
+      Всяка клетка носи линия отгоре и отляво, а решетката е изтеглена с
+      един пиксел нагоре и наляво в изрязан контейнер. Така външните линии
+      падат извън кадъра и остават само вътрешните — на всяка ширина, без
+      да се смятат съседи по breakpoint.
+    -->
+    <div class="overflow-hidden">
+      <div class="-mt-px -ml-px grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          HIGHLIGHTS.map((item, i) => (
+            <div
+              class="flex flex-col items-center gap-3 border-t border-l border-white/8 px-6 py-10 text-center lg:px-10 lg:py-14"
+              data-opai-animate
+              data-delay={`${0.08 + (i % 3) * 0.08}`}
+            >
+              <Icon name={item.icon} class="text-opai-cyan size-7" />
+              <h3 class="text-sora-heading-6 font-normal text-white">{item.title}</h3>
+              <p class="text-tagline-3 max-w-[34ch] font-normal text-white/50">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

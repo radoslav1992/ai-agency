@@ -1,4 +1,5 @@
 ---
+import Glow, { type Props as GlowProps } from './Glow.astro';
 import Eyebrow from './Eyebrow.astro';
 
 /** Шапката на вътрешните страници — същият герой, но по-нисък. */
@@ -6,7 +7,7 @@ type Props = {
   eyebrow: string;
   title: string;
   lead?: string;
-  gradient?: string;
+  gradient?: NonNullable<GlowProps['src']>;
 };
 
 const { eyebrow, title, lead, gradient = 'opai-28' } = Astro.props;
@@ -15,14 +16,7 @@ const { eyebrow, title, lead, gradient = 'opai-28' } = Astro.props;
 <section
   class="bg-background-6 relative overflow-hidden pt-32 pb-16 before:absolute before:top-0 before:left-0 before:h-[130%] before:w-[107vw] before:bg-[url('/images/shape/vector-14.svg')] before:bg-cover before:bg-center before:bg-no-repeat before:content-[''] sm:pt-40 lg:pt-44 lg:pb-24"
 >
-  <img
-    src={`/images/gradient/${gradient}.webp`}
-    alt=""
-    aria-hidden="true"
-    class="pointer-events-none absolute -top-[45%] left-1/2 h-[760px] w-[760px] max-w-none -translate-x-1/2 object-contain opacity-55"
-    loading="eager"
-    decoding="async"
-  />
+  <Glow src={gradient} at="top" class="h-[820px] w-[820px] opacity-80" eager />
 
   <div class="main-container relative z-2 max-w-[820px] space-y-5 text-center">
     <div data-opai-animate data-delay="0.1" class="flex justify-center">
