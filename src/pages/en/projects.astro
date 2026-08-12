@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProjectGrid from '../../components/ProjectGrid.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { localeOf } from '../../i18n/index.ts';
+import { PAGES } from '../../i18n/pages.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const p = PAGES[lang].projects;
+---
+
+<BaseLayout title={p.metaTitle} description={p.metaDescription}>
+  <PageHeader eyebrow={p.eyebrow} title={p.title} lead={p.lead} gradient="opai-26" />
+  <ProjectGrid />
+  <CtaBanner />
+</BaseLayout>

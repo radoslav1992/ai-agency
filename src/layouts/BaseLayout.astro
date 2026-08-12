@@ -1,0 +1,133 @@
+---
+import '@fontsource-variable/sora';
+import '@fontsource-variable/inter-tight';
+import '@fontsource-variable/manrope';
+import '@fontsource/ibm-plex-mono/400.css';
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CookieConsent from '../components/CookieConsent.astro';
+import { localeOf, alternates, HTML_LANG, OG_LOCALE } from '../i18n/index.ts';
+import { ui, meta as metaFor } from '../i18n/content.ts';
+import { SITE } from '../data/site.mjs';
+
+type Props = {
+  title?: string;
+  description?: string;
+  /** `noindex` за страници, които нямат работа в резултатите. */
+  noindex?: boolean;
+  /** Различна социална картичка за конкретна страница. */
+  ogImage?: string;
+};
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const defaults = metaFor(lang);
+
+const { title, description, noindex = false, ogImage = '/og.png' } = Astro.props;
+
+const pageTitle = title ? `${title} — ${SITE.name}` : defaults.title;
+const pageDescription = description ?? defaults.description;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogUrl = new URL(ogImage, SITE.url).href;
+const langAlternates = alternates(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang={HTML_LANG[lang]} class="bg-background-5">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {/* Google tag (gtag.js) — Consent Mode v2: тръгва с отказани бисквитки,
+        а банерът за съгласие (CookieConsent) вдига analytics_storage при
+        „Приемам“. Така тагът присъства на всяка страница, но не поставя
+        бисквитки без съгласие. */}
+    {
+      SITE.gaId && (
+        <>
+          <script is:inline define:vars={{ gaId: SITE.gaId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            window.gtag = gtag;
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied',
+            });
+            gtag('js', new Date());
+            gtag('config', gaId);
+          </script>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`} />
+        </>
+      )
+    }
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {
+      langAlternates.map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={new URL(alt.path, SITE.url).href} />
+      ))
+    }
+    {
+      langAlternates.length > 0 && (
+        <link rel="alternate" hreflang="x-default" href={new URL('/', SITE.url).href} />
+      )
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <meta name="theme-color" content="#11141d" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {lang === 'bg' && <link rel="alternate" type="application/rss+xml" title={t.layout.blogTitle} href="/rss.xml" />}
+  </head>
+
+  <body class="bg-background-5">
+    <a
+      href="#main"
+      class="text-tagline-3 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+    >
+      {t.layout.skip}
+    </a>
+
+    <Header />
+
+    <main id="main" class="bg-background-5 overflow-x-hidden">
+      <slot />
+    </main>
+
+    <Footer />
+    <CookieConsent />
+
+    <!-- Анимационният двигател на шаблона. `defer` — нищо от него не блокира рисуването. -->
+    <script is:inline src="/vendor/gsap.min.js" defer></script>
+    <script is:inline src="/vendor/scroll-trigger.min.js" defer></script>
+    <script is:inline src="/vendor/split-text.min.js" defer></script>
+    <script is:inline src="/vendor/springer.min.js" defer></script>
+    <script is:inline src="/vendor/lenis.min.js" defer></script>
+    <script is:inline src="/vendor/vanilla-infinite-marquee.min.js" defer></script>
+    <script is:inline src="/vendor/template.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,166 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { localeOf, href as localeHref } from '../i18n/index.ts';
+import { ui, content } from '../i18n/content.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { SERVICES, SECONDARY_SERVICES } = content(lang);
+
+/** Водещата услуга заема цялата ширина; останалите вървят по три в ред. */
+const [lead, ...rest] = SERVICES;
+const gradients = ['opai-25', 'opai-26', 'opai-27', 'opai-28'];
+---
+
+<section id="services" class="scroll-mt-28 py-20 md:py-24 lg:py-28 xl:py-36">
+  <div class="main-container space-y-14 md:space-y-19">
+    <SectionHeading eyebrow={t.services.eyebrow} title={t.services.title} note={t.services.note} />
+
+    <div class="grid grid-cols-12 gap-6">
+      <!-- Водещата услуга -->
+      <article
+        class="bg-background-6 border-stroke-1/11 relative col-span-12 overflow-hidden rounded-lg border"
+        data-opai-animate
+        data-delay="0.1"
+      >
+        <img
+          src="/images/gradient/opai-24.webp"
+          alt=""
+          aria-hidden="true"
+          class="pointer-events-none absolute -top-[40%] -right-[10%] h-[520px] w-[520px] max-w-none object-contain opacity-70"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="relative z-2 grid grid-cols-12 gap-x-10 gap-y-8 p-6 sm:p-9 lg:p-12">
+          <div class="col-span-12 space-y-5 lg:col-span-5">
+            <span class="font-ibm-plex-mono text-tagline-4 text-white/40">{lead.number}</span>
+            <h3 class="text-sora-heading-5 md:text-sora-heading-4 font-normal text-white">
+              {lead.title}
+            </h3>
+            {
+              lead.problem && (
+                <div class="space-y-1.5">
+                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.problem}</p>
+                  <p class="text-tagline-3 font-normal text-white/60">{lead.problem}</p>
+                </div>
+              )
+            }
+            {
+              lead.solution && (
+                <div class="space-y-1.5">
+                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.solution}</p>
+                  <p class="text-tagline-3 font-normal text-white/60">{lead.solution}</p>
+                </div>
+              )
+            }
+            {
+              lead.link && (
+                <a
+                  href={localeHref(lead.link.href, lang)}
+                  class="text-tagline-3 font-sora inline-block text-white transition-opacity duration-300 hover:opacity-70"
+                >
+                  {lead.link.label}
+                </a>
+              )
+            }
+          </div>
+
+          <div class="col-span-12 lg:col-span-7">
+            <p class="font-ibm-plex-mono text-tagline-4 mb-4 text-white/40 uppercase">{t.services.change}</p>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {
+                (lead.changes ?? []).map((change) => (
+                  <div class="bg-background-5 border-stroke-1/11 space-y-2 rounded-lg border p-5">
+                    <h4 class="text-sora-heading-6 font-normal text-white">{change.title}</h4>
+                    <p class="text-tagline-3 font-normal text-white/60">{change.body}</p>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Останалите услуги -->
+      {
+        [...rest, ...SECONDARY_SERVICES].map((service, i) => (
+          <article
+            class="bg-background-6 border-stroke-1/11 relative col-span-12 overflow-hidden rounded-lg border md:col-span-6 xl:col-span-3"
+            data-opai-animate
+            data-delay={`${0.15 + i * 0.08}`}
+          >
+            <img
+              src={`/images/gradient/${gradients[i % gradients.length]}.webp`}
+              alt=""
+              aria-hidden="true"
+              class="pointer-events-none absolute -top-[22%] -right-[24%] h-[300px] w-[300px] max-w-none object-contain opacity-60"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="relative z-2 flex h-full flex-col gap-5 p-6 lg:p-8">
+              <span class="font-ibm-plex-mono text-tagline-4 text-white/40">{service.number}</span>
+              <h3 class="text-sora-heading-6 md:text-sora-heading-5 font-normal text-white">{service.title}</h3>
+
+              {service.body && <p class="text-tagline-3 font-normal text-white/60">{service.body}</p>}
+
+              {service.problem && (
+                <div class="space-y-1.5">
+                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.problem}</p>
+                  <p class="text-tagline-3 font-normal text-white/60">{service.problem}</p>
+                </div>
+              )}
+              {service.solution && (
+                <div class="space-y-1.5">
+                  <p class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{t.services.solution}</p>
+                  <p class="text-tagline-3 font-normal text-white/60">{service.solution}</p>
+                </div>
+              )}
+              {service.change && (
+                <div class="space-y-1.5">
+                  <p class="font-ibm-plex-mono text-tagline-4 text-white/40 uppercase">{t.services.change}</p>
+                  <p class="text-tagline-3 font-normal text-white/60" set:html={service.change} />
+                </div>
+              )}
+
+              {service.points && (
+                <ul class="mt-auto space-y-2 pt-2">
+                  {service.points.map((point) => (
+                    <li class="text-tagline-3 flex gap-x-2.5 font-normal text-white/60">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        aria-hidden="true"
+                        class="mt-1 shrink-0"
+                      >
+                        <path
+                          d="M3 8.5L6.2 11.5L13 4.5"
+                          stroke="#5DDCF6"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {service.link && (
+                <a
+                  href={localeHref(service.link.href, lang)}
+                  class="text-tagline-3 font-sora mt-auto inline-block text-white transition-opacity duration-300 hover:opacity-70"
+                >
+                  {service.link.label}
+                </a>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,149 @@
+---
+import { Image } from 'astro:assets';
+import logoMark from '../assets/brand/logo-mark.webp';
+import Button from './Button.astro';
+import { localeOf, href as localeHref, pathForLocale, hasTranslation } from '../i18n/index.ts';
+import { nav, cta, ui, brand } from '../i18n/content.ts';
+import { SITE } from '../data/site.mjs';
+
+/**
+ * Хедърът на шаблона: плаващ панел с градиентен пръстен, който се сгъстява
+ * при скрол (`.header-scroll` → `template.js`).
+ */
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const links = nav(lang);
+const action = cta(lang);
+const path = Astro.url.pathname;
+const name = brand(lang);
+
+/** Превключвателят се показва само там, където другият език наистина има страница. */
+const showSwitch = hasTranslation(path);
+const otherLang = lang === 'bg' ? 'en' : 'bg';
+const otherHref = pathForLocale(path, otherLang);
+const otherLabel = otherLang === 'bg' ? 'BG' : 'EN';
+const switchTitle = otherLang === 'bg' ? 'Виж на български' : 'View in English';
+---
+
+<header>
+  <nav
+    data-opai-animate
+    data-delay="0.1"
+    data-direction="top"
+    data-instant
+    aria-label={t.header.nav}
+    class="header-scroll fixed top-5 left-1/2 z-50 mx-auto w-full max-w-[350px] -translate-x-1/2 rounded-lg bg-[linear-gradient(to_top,#2BC0E4_0%,#EAECC6_35%,transparent_55%)] p-px backdrop-blur-[25px] md:max-w-[640px] lg:max-w-[980px] xl:max-w-[1180px] 2xl:max-w-[1290px]"
+  >
+    <div class="bg-background-13 relative overflow-visible rounded-lg px-3 py-3 lg:py-0 xl:px-5">
+      <div class="flex items-center justify-between">
+        <a href={localeHref('/', lang)} class="flex items-center gap-x-2.5">
+          <Image src={logoMark} alt="" width={36} height={36} class="size-9 shrink-0" loading="eager" />
+          <span class="font-sora text-tagline-1 leading-none font-medium text-white">
+            {name.shortName}<span class="text-white/50"> {name.suffix}</span>
+          </span>
+          <span class="sr-only">{t.header.home}</span>
+        </a>
+
+        <div class="hidden items-center gap-10 lg:flex 2xl:gap-14">
+          <ul class="flex items-center gap-8">
+            {
+              links.map((item) => (
+                <li class="group/nav-item relative py-6">
+                  <a href={localeHref(item.href, lang)} class="flex items-center gap-1.5">
+                    <span class="text-tagline-2 font-sora font-normal text-white/60 transition-colors duration-300 group-hover/nav-item:text-white">
+                      {item.label}
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="hidden items-center gap-x-4 lg:flex">
+          {
+            showSwitch && (
+              <a
+                href={otherHref}
+                hreflang={otherLang}
+                title={switchTitle}
+                class="font-ibm-plex-mono text-tagline-4 rounded-[4px] border border-white/12 px-2.5 py-1.5 text-white/60 transition-colors duration-300 hover:border-white/30 hover:text-white"
+              >
+                {otherLabel}
+              </a>
+            )
+          }
+          <Button href={localeHref(action.href, lang)}>{action.label}</Button>
+        </div>
+
+        <button
+          type="button"
+          class="nav-hamburger flex cursor-pointer flex-col items-end justify-center space-y-2 lg:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-sidebar"
+          aria-label={t.header.open}
+        >
+          <span class="sr-only">{t.header.open}</span>
+          <span class="bg-background-7 block h-px w-9"></span>
+          <span class="bg-background-7 block h-px w-6"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Мобилното меню -->
+  <aside
+    id="mobile-sidebar"
+    class="bg-background-13 fixed top-0 right-0 z-60 h-dvh w-[86%] max-w-[380px] translate-x-full overflow-y-auto border-l border-white/10 px-6 py-6 transition-transform duration-500 ease-in-out lg:hidden"
+    aria-label={t.header.nav}
+  >
+    <div class="flex items-center justify-between">
+      <a href={localeHref('/', lang)} class="flex items-center gap-x-2.5">
+        <Image src={logoMark} alt="" width={32} height={32} class="size-8 shrink-0" />
+        <span class="font-sora text-tagline-2 font-medium text-white">{name.shortName} {name.suffix}</span>
+      </a>
+      <button
+        type="button"
+        class="nav-hamburger-close flex size-9 cursor-pointer items-center justify-center rounded-lg border border-white/12 text-white"
+        aria-label={t.header.close}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <ul class="mt-10 space-y-1">
+      {
+        links.map((item) => (
+          <li>
+            <a
+              href={localeHref(item.href, lang)}
+              class="text-tagline-1 font-sora block rounded-lg px-3 py-3 text-white/70 transition-colors duration-300 hover:bg-white/5 hover:text-white"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-8 space-y-4 border-t border-white/10 pt-8">
+      <Button href={localeHref(action.href, lang)}>{action.label}</Button>
+      {
+        showSwitch && (
+          <a
+            href={otherHref}
+            hreflang={otherLang}
+            class="text-tagline-3 font-ibm-plex-mono block text-white/50 transition-colors hover:text-white"
+          >
+            {switchTitle}
+          </a>
+        )
+      }
+      <a href={`mailto:${SITE.email}`} class="text-tagline-3 block text-white/50 transition-colors hover:text-white">
+        {SITE.email}
+      </a>
+    </div>
+  </aside>
+</header>

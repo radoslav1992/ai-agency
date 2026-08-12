@@ -1,0 +1,108 @@
+---
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import Eyebrow from './Eyebrow.astro';
+import { localeOf, href as localeHref } from '../i18n/index.ts';
+import { ui, agents as agentsFor, location } from '../i18n/content.ts';
+import { agentShot } from '../data/agentShots.ts';
+
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const { AGENTS } = agentsFor(lang);
+
+/**
+ * Плаващите картинки в героя са рисунките на агентите, а не стокови кадри:
+ * читателят вижда точно това, което сайтът продава, още преди да е скролнал.
+ */
+const floaters = ['receptionist', 'documents', 'email', 'quotes']
+  .map((id) => ({ shot: agentShot(id), agent: AGENTS.find((a) => a.id === id) }))
+  .filter((f): f is { shot: NonNullable<ReturnType<typeof agentShot>>; agent: (typeof AGENTS)[number] } =>
+    Boolean(f.shot && f.agent),
+  );
+
+const positions = [
+  'top-[16%] left-[-1%] h-[190px] w-[270px] rotate-[-6deg]',
+  'top-[13%] right-[-1%] h-[170px] w-[250px] rotate-[5deg]',
+  'bottom-[6%] left-[4%] h-[160px] w-[230px] rotate-[4deg]',
+  'bottom-[4%] right-[3%] h-[175px] w-[255px] rotate-[-5deg]',
+];
+---
+
+<section
+  class="bg-background-6 relative overflow-hidden pt-32 pb-20 before:absolute before:top-0 before:left-0 before:h-[120%] before:w-[107vw] before:bg-[url('/images/shape/vector-14.svg')] before:bg-cover before:bg-center before:bg-no-repeat before:content-[''] sm:pt-40 lg:min-h-screen lg:pt-44 lg:pb-28"
+>
+  <img
+    src="/images/gradient/opai-29.webp"
+    alt=""
+    aria-hidden="true"
+    class="pointer-events-none absolute top-[-30%] left-1/2 z-0 h-[900px] w-[900px] max-w-none -translate-x-1/2 object-contain opacity-60"
+    loading="eager"
+    decoding="async"
+  />
+
+  <div class="main-container relative z-10 flex h-full flex-col items-center justify-center text-center">
+    <div data-opai-animate data-delay="0.1">
+      <Eyebrow>{location(lang)}</Eyebrow>
+    </div>
+
+    <h1
+      data-opai-animate
+      data-delay="0.15"
+      class="text-sora-heading-3 sm:text-sora-heading-2 lg:text-sora-heading-1 mt-5 max-w-[980px] text-white"
+    >
+      {t.hero.titleLead}{' '}
+      <span
+        class="bg-linear-[90deg,#2BC0E4_0%,#EAECC6_100%] bg-clip-text text-transparent">{t.hero.titleAccent}</span
+      >
+    </h1>
+
+    <p data-opai-animate data-delay="0.25" class="text-tagline-2 mt-5 max-w-[640px] font-normal text-white/60">
+      {t.hero.lead}
+    </p>
+
+    <div data-opai-animate data-delay="0.35" class="mt-9 flex flex-wrap items-center justify-center gap-4">
+      <Button href={localeHref('/contact/', lang)}>{t.hero.ctaPrimary}</Button>
+      <Button href={localeHref('/#process', lang)} variant="ghost">{t.hero.ctaSecondary}</Button>
+    </div>
+
+    <p data-opai-animate data-delay="0.4" class="text-tagline-3 mt-5 max-w-[520px] font-normal text-white/40">
+      {t.hero.subnote}
+    </p>
+
+    <ul
+      data-opai-animate
+      data-delay="0.45"
+      class="mt-12 flex w-full max-w-[980px] flex-wrap items-center justify-center gap-x-3 gap-y-3"
+    >
+      {
+        t.hero.facts.map((fact) => (
+          <li class="border-stroke-1/11 text-tagline-3 rounded-lg border bg-white/[0.02] px-4 py-2.5 font-normal text-white/60 backdrop-blur-[10px]">
+            {fact}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Плаващите рисунки на агентите — само на широк екран, където има място. -->
+  {
+    floaters.map((f, i) => (
+      <figure
+        data-opai-animate
+        data-delay={`${0.5 + i * 0.12}`}
+        data-spring
+        data-duration="2.6"
+        class={`border-stroke-1/11 absolute z-1 hidden overflow-hidden rounded-lg border bg-white/5 p-1 backdrop-blur-[6px] xl:block ${positions[i]}`}
+      >
+        <Image
+          src={f.shot}
+          alt={f.agent.alt}
+          widths={[260, 520]}
+          sizes="270px"
+          class="size-full rounded-md object-cover"
+        />
+        <figcaption class="sr-only">{f.agent.name}</figcaption>
+      </figure>
+    ))
+  }
+</section>

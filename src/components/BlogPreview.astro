@@ -1,0 +1,53 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { localeOf, href as localeHref } from '../i18n/index.ts';
+import { ui } from '../i18n/content.ts';
+import { getPosts, formatDate } from '../lib/posts.ts';
+
+/** Блогът е само на български — секцията се вгражда единствено в `/`. */
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+const posts = (await getPosts()).slice(0, 3);
+---
+
+{
+  posts.length > 0 && (
+    <section class="py-20 md:py-24 lg:py-28 xl:py-36">
+      <div class="main-container space-y-14 md:space-y-19">
+        <div class="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
+          <SectionHeading eyebrow={t.blog.eyebrow} title={t.blog.title} align="left" class="lg:max-w-[560px]" />
+          <a
+            href={localeHref('/blog/', lang)}
+            class="text-tagline-3 font-sora shrink-0 text-white transition-opacity duration-300 hover:opacity-70"
+            data-opai-animate
+            data-delay="0.2"
+          >
+            {t.blog.all}
+          </a>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6">
+          {posts.map((post, i) => (
+            <article
+              class="bg-background-6 border-stroke-1/11 col-span-12 overflow-hidden rounded-lg border transition-colors duration-500 hover:border-white/25 md:col-span-6 lg:col-span-4"
+              data-opai-animate
+              data-delay={`${0.1 + i * 0.1}`}
+            >
+              <a href={localeHref(`/blog/${post.id}/`, lang)} class="flex h-full flex-col gap-4 p-6 lg:p-8">
+                <div class="flex items-center gap-3">
+                  <span class="font-ibm-plex-mono text-tagline-4 text-opai-cyan uppercase">{post.data.tag}</span>
+                  <span class="text-tagline-4 text-white/30">{post.data.readMinutes} мин</span>
+                </div>
+                <h3 class="text-sora-heading-6 font-normal text-white">{post.data.title}</h3>
+                <p class="text-tagline-3 font-normal text-white/60">{post.data.excerpt}</p>
+                <time class="text-tagline-4 mt-auto pt-2 text-white/30" datetime={post.data.pubDate.toISOString()}>
+                  {formatDate(post.data.pubDate)}
+                </time>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

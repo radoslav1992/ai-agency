@@ -1,0 +1,40 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+/** Общата рамка на правните страници — тесен текст, четим на един дъх. */
+type Props = {
+  title: string;
+  description: string;
+  eyebrow: string;
+  updated: string;
+};
+
+const { title, description, eyebrow, updated } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="relative overflow-hidden pt-32 pb-16 sm:pt-40 lg:pt-44">
+    <img
+      src="/images/gradient/opai-27.webp"
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute -top-[40%] left-1/2 h-[640px] w-[640px] max-w-none -translate-x-1/2 object-contain opacity-50"
+      loading="eager"
+      decoding="async"
+    />
+    <div class="main-container relative z-2 max-w-[760px] space-y-4">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h1 class="text-sora-heading-4 sm:text-sora-heading-3 lg:text-sora-heading-2 text-white">{title}</h1>
+      <p class="text-tagline-3 font-normal text-white/40">{updated}</p>
+    </div>
+  </section>
+
+  <section class="pb-20 lg:pb-28">
+    <div class="main-container">
+      <div class="bg-background-6 border-stroke-1/11 prose-opai mx-auto max-w-[860px] rounded-lg border p-6 sm:p-9 lg:p-12">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

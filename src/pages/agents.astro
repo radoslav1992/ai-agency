@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import AgentCatalog from '../components/AgentCatalog.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { localeOf } from '../i18n/index.ts';
+import { agents as agentsFor, brand } from '../i18n/content.ts';
+import { PAGES } from '../i18n/pages.ts';
+import { SITE } from '../data/site.mjs';
+
+const lang = localeOf(Astro.currentLocale);
+const p = PAGES[lang].agents;
+const { AGENTS } = agentsFor(lang);
+const studio = `${brand(lang).shortName} ${brand(lang).suffix}`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `${p.metaTitle} — ${studio}`,
+  itemListElement: AGENTS.map((agent, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'Service',
+      name: agent.name,
+      description: agent.short,
+      areaServed: 'BG',
+      provider: { '@type': 'Organization', name: studio, url: SITE.url },
+    },
+  })),
+};
+---
+
+<BaseLayout title={p.metaTitle} description={p.metaDescription}>
+  <PageHeader eyebrow={p.eyebrow} title={p.title} lead={p.lead} />
+  <AgentCatalog />
+  <CtaBanner />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

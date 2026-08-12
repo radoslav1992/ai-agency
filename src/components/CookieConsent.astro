@@ -1,0 +1,114 @@
+---
+import { SITE } from '../data/site.mjs';
+import { href as localised, localeOf } from '../i18n/index.ts';
+import { ui } from '../i18n/content.ts';
+
+/**
+ * Банер за съгласие за бисквитки (Google Consent Mode v2).
+ *
+ * Самият Google tag се зарежда в <head> от `BaseLayout` с consent default
+ * „denied“ — без бисквитки и идентификатори. Този банер само вдига
+ * `analytics_storage` при „Приемам“. Изборът се помни в localStorage и може
+ * да се промени от всеки елемент с `data-cookie-reset` (бутонът на
+ * `/cookies/`).
+ *
+ * `SITE.gaId = null` изключва и аналитиката, и банера изцяло.
+ */
+const gaId = SITE.gaId;
+const lang = localeOf(Astro.currentLocale);
+const t = ui(lang);
+---
+
+{
+  gaId && (
+    <>
+      <div
+        data-cookie-banner
+        hidden
+        role="region"
+        aria-label={t.cookies.label}
+        class="bg-background-6 border-stroke-1/11 fixed inset-x-4 bottom-4 z-90 mx-auto flex max-w-[680px] flex-wrap items-center justify-between gap-4 rounded-lg border p-5 shadow-[0_24px_70px_-30px_#000] backdrop-blur-[20px] [&[hidden]]:hidden"
+      >
+        <p class="text-tagline-3 max-w-[420px] font-normal text-white/60">
+          {t.cookies.bodyA}{' '}
+          <a href={localised('/cookies/', lang)} class="text-opai-cyan underline underline-offset-4">
+            {t.cookies.link}
+          </a>
+          .
+        </p>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            data-cookie-accept
+            class="text-tagline-3 cursor-pointer rounded-lg bg-linear-to-r from-[#2BC0E4] to-[#EAECC6] px-5 py-2.5 font-medium text-[#0d1017] transition-opacity duration-300 hover:opacity-85"
+          >
+            {t.cookies.accept}
+          </button>
+          <button
+            type="button"
+            data-cookie-decline
+            class="text-tagline-3 cursor-pointer rounded-lg border border-white/15 px-5 py-2.5 font-normal text-white/70 transition-colors duration-300 hover:border-white/30 hover:text-white"
+          >
+            {t.cookies.decline}
+          </button>
+        </div>
+      </div>
+
+      <script is:inline>
+        (function () {
+          var KEY = 'kova-cookie-consent';
+          var banner = document.querySelector('[data-cookie-banner]');
+          if (!banner) return;
+
+          /* Тагът вече е зареден с consent default „denied“ — тук само го вдигаме. */
+          function grantAnalytics() {
+            if (window.gtag) {
+              window.gtag('consent', 'update', { analytics_storage: 'granted' });
+            }
+          }
+
+          function read() {
+            try {
+              return localStorage.getItem(KEY);
+            } catch (e) {
+              return null;
+            }
+          }
+
+          function choose(value) {
+            try {
+              localStorage.setItem(KEY, value);
+            } catch (e) {
+              /* частен режим без localStorage — изборът важи за тази страница */
+            }
+            banner.hidden = true;
+            if (value === 'granted') grantAnalytics();
+          }
+
+          var choice = read();
+          if (choice === 'granted') grantAnalytics();
+          else if (choice !== 'denied') banner.hidden = false;
+
+          banner.querySelector('[data-cookie-accept]').addEventListener('click', function () {
+            choose('granted');
+          });
+          banner.querySelector('[data-cookie-decline]').addEventListener('click', function () {
+            choose('denied');
+          });
+
+          document.querySelectorAll('[data-cookie-reset]').forEach(function (el) {
+            el.addEventListener('click', function () {
+              try {
+                localStorage.removeItem(KEY);
+              } catch (e) {
+                /* няма какво да чистим */
+              }
+              banner.hidden = false;
+              banner.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            });
+          });
+        })();
+      </script>
+    </>
+  )
+}
